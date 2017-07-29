@@ -13,3 +13,4 @@ Web-extension based on vulners Vulnerability scanner API
 2. "Load unpacked extension"
 3. Surf internet and scan!
 
+![Yo](https://github.com/vankyver/vulners-browser-scanner/blob/master/icons/4e53cdc9-2d37-4211-8e20-7ec16daaaac2.jpeg?raw=true)
