@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <title>HTTP Headers</title>
+    <style>
+        html {
+            width: auto;
+        }
+
+        body {
+            font-family: "Roboto", Arial, sans-serif;
+            font-size: 100%;
+            min-width: 450px;
+            overflow: scroll;
+            background-color: #fff;
+            color: #38383a;
+            margin: 0;
+        }
+
+        label {
+            display: block;
+            padding: 16px;
+            background-color: #38383A;
+            color: rgb(255, 255, 255);
+        }
+
+        #content {
+            padding: 16px;
+        }
+
+        .soft {
+            margin-top: 8px;
+            padding-left: 16px;
+        }
+
+        .domain {
+            margin: 8px 0;
+        }
+
+        .vulnerability {
+            padding-left: 16px;
+        }
+
+        .vulnerability-id {
+            color: #ff6600;
+        }
+
+        .vulnerability-ttle {
+            padding-left: 16px;
+        }
+
+        .success {
+            background-color: rgba(39, 174, 96, .3);
+        }
+
+        .warning {
+            background-color: rgba(243, 156, 18, .3);
+        }
+
+        .error {
+            background-color: rgba(192, 57, 43, .3);
+        }
+
+    </style>
+    <script src="popup.js"></script>
+</head>
+<body>
+<label>
+    SHOW ALL DOMAINS
+    <input id="show_all_content" type="checkbox"/>
+</label>
+<div id="content">
+</div>
+</body>
+</html>
+

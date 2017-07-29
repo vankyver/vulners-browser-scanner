@@ -1,0 +1,20 @@
+{
+  "author": "Vulners.com",
+  "background": {
+    "persistent": true,
+    "scripts": [ "catcher.js" ]
+  },
+  "browser_action": {
+    "default_icon": "icons/icon.png",
+    "default_popup": "popup.html",
+    "default_title": "View HTTP headers"
+  },
+  "description": "View and inspect HTTP Headers",
+
+  "manifest_version": 2,
+  "name": "Vulners Headers Scanner",
+  "permissions": [ "tabs", "webRequest", "webNavigation", "http://*/*", "https://*/*" ],
+  "short_name": "HTTP Headers",
+  "update_url": "https://clients2.google.com/service/update2/crx",
+  "version": "1.0.5"
+}
