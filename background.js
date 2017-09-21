@@ -13,8 +13,8 @@ const LS_KEY_STAT = 'vulners-chrome-scanner-stat';
 const lsStat = localStorage.getItem(LS_KEY_STAT);
 
 const rules = [];
-const data  = lsData ? JSON.parse(lsData) : {};
-const stat  = lsStat ? JSON.parse(lsStat) : {vulnerable: 0, scanned: 0};
+let data  = lsData ? JSON.parse(lsData) : {};
+let stat  = lsStat ? JSON.parse(lsStat) : {vulnerable: 0, scanned: 0};
 
 // Rewrite fetch to make it with minimal timeout between requests
 const REQUEST_TIMEOUT = 300;
@@ -33,10 +33,11 @@ const getTemplate = (tpl) => fetch(getUrl(`/templates/${tpl}.hbs`))
 const TEMPLATES = {
     data: getTemplate('data'),
     none: getTemplate('none'),
-    index: getTemplate('index')
+    index: getTemplate('index'),
+    wrong: getTemplate('wrong')
 };
 
-const COLORS = [];
+const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
 
 
 /**
@@ -63,13 +64,13 @@ fetch(RULES_URL)
 /**
  * Catch page load responses
  */
-chrome.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
+browser.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
 
 
 /**
  * Update extension icon with status code badge
  */
-chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
+browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
     if (info.status === "complete") {
 
         let host = new URL(tab.url).host;
@@ -77,17 +78,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
         if (vlns) {
             //set badge for status code if different than 200 OK
-            Object.keys(vlns).length && chrome.browserAction.setBadgeText({
+            Object.keys(vlns).length && browser.browserAction.setBadgeText({
                 text : String(Object.keys(vlns).length),
                 tabId: tabId
             });
         }
         // Re-enable the button
-        chrome.browserAction.enable(tabId);
+        browser.browserAction.enable(tabId);
 
     } else if (info.status === "loading") {
         //disable the button
-        chrome.browserAction.disable(tabId);
+        browser.browserAction.disable(tabId);
     }
 });
 
@@ -95,16 +96,23 @@ chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
 /**
  * Message listeners
  */
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
         case 'show_vulnerabilities':
-            sender.id == chrome.runtime.id &&
-                chrome.tabs.get(request.tab_id, tab => {
+            sender.id == browser.runtime.id &&
+                browser.tabs.get(request.tab_id, tab => {
                     sendResponse({tab, data, stat, templates: TEMPLATES})
                 });
             break;
         case 'set_popup':
-            chrome.browserAction.setPopup({popup: 'popup.html'});
+            browser.browserAction.setPopup({popup: 'popup.html'});
+            break;
+        case 'clear_data':
+            data = {};
+            stat = {vulnerable: 0, scanned: 0};
+            browser.tabs.get(request.tab_id, tab => {
+                sendResponse({tab, data, stat, templates: TEMPLATES})
+            });
     }
     return true;
 });
@@ -168,13 +176,13 @@ function fetchThrottled(host, rule, version) {
                     let s = i._source;
                     return {
                         id: s.id,
-                        title: s.title,
+                        title: s.title === s.id ? s.description : s.title,
                         score: s.cvss.score,
                         scoreColor: getScoreColor(s.cvss.score),
                         description: s.description
                     }
                 })
-                .sort((a,b) => a.score - b.score);
+                .sort((a,b) => b.score - a.score);
 
             // Add max score value of soft vulnerability
             let softVulns = data[host][rule.name]['vulnerabilities'];
@@ -219,4 +227,4 @@ function throttled(fn, timeout) {
     }
 }
 
-chrome.browserAction.setBadgeBackgroundColor({color: '#d35400'});
+browser.browserAction.setBadgeBackgroundColor({color: '#d35400'});

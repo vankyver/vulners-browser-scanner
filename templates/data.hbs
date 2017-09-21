@@ -7,17 +7,20 @@
             <ul class="collapsible" data-collapsible="expandable">
 
                 {% for soft in domain.soft %}
-                    <li class="soft hoverable">
+                    <li class="soft
+                        {% if soft.score%}
+                            hoverable
+                        {% endif %}
+                        ">
                         <div class="collapsible-header">
                             {{ soft.software }}
 
                             {% if soft.score %}
                                 <div>
-                                    {% if soft.score > 4 %}
-                                        <i class="material-icons">whatshot</i>
-                                    {% endif %}
-                                    <span>{{soft.score}}</span>
+                                    <span style="font-size: 16px; color:{{soft.scoreColor}}">{{soft.score}}</span>
                                 </div>
+                            {% else %}
+                                <div class="light-green-text">Not vulnerable</div>
                             {% endif %}
                         </div>
 
@@ -26,12 +29,15 @@
                             <ul class="collection">
 
                                 {% for vns in soft.vulnerabilities %}
-                                    <li class="collection-item">
-                                        <a class="" href="https://vulners.com/{{ soft.type }}/{{vns.id}}">
-                                            <span class="title">{{vns.id}}</span>
-                                            <span >{{vns.title}}</span>
-
-                                            <a class="secondary-content"><i class="material-icons">send</i></a>
+                                    <li class="collection-item data-item">
+                                        <div>
+                                            <a class="" href="https://vulners.com/{{ soft.type }}/{{vns.id}}">
+                                                <span class="title">{{vns.id}}</span>
+                                            </a>
+                                            <span class="truncate data-title">{{vns.title}}</span>
+                                        </div>
+                                        <a class="secondary-content">
+                                            <span style="font-size: 16px; color:{{vns.scoreColor}}">{{vns.score}}</span>
                                         </a>
                                     </li>
                                 {% endfor %}

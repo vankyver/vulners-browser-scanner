@@ -9,8 +9,8 @@ browser = isChrome ? chrome : browser;
 const DOMAIN_REGEX = /(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/i;
 
 const render = function () {
-    chrome.tabs.getSelected(null, function (tab) {
-        chrome.runtime.sendMessage(
+    browser.tabs.getSelected(null, function (tab) {
+        browser.runtime.sendMessage(
             {
                 action: 'show_vulnerabilities',
                 tab_id: tab.id
@@ -37,7 +37,7 @@ const doRender = (response) => {
                 .map(d => {
                     return {
                         name: d,
-                        soft: data[d]
+                        soft: sortSorftByScore(data[d])
                     }
                 })
             }
@@ -45,12 +45,14 @@ const doRender = (response) => {
     }
 
     if (!data[host]) {
-        return doRenderContent(templates.none, {domains});
+        return extractDomain(url) ?
+            doRenderContent(templates.none, {}):
+            doRenderContent(templates.wrong, {url});
     }
 
     domains[host] = {
         name: host,
-        soft: data[host]
+        soft: sortSorftByScore(data[host])
     };
 
     doRenderContent(templates.data, {domains});
@@ -62,14 +64,27 @@ const doRender = (response) => {
 const doRenderContent = (template, data) => {
     document.getElementById('content').innerHTML = Ashe.parse(template, data);
     document.getElementById('show_all_content').addEventListener('click', render);
+    document.querySelector('.material-icons.delete').addEventListener('click', onClearClick);
 
     $('.collapsible').collapsible();
+    $('.tooltipped').tooltip({delay: 50});
 };
 
 const doRenderHeader = (stat) => {
     document.getElementById('stat-vulnerable').innerText = stat.vulnerable;
     document.getElementById('stat-scanned').innerText = stat.scanned;
 };
+
+const onClearClick = () => {
+    browser.tabs.getSelected(null, function (tab) {
+        browser.runtime.sendMessage({action: 'clear_data', tab_id: tab.id}, doRender);
+    });
+};
+
+const sortSorftByScore = (soft) =>
+    Object.keys(soft)
+        .sort((a, b) => soft[b].score - soft[a].score)
+        .map(s => soft[s]);
 
 /**
  * Checkbox is on/off
