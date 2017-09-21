@@ -1,0 +1,51 @@
+
+    {% for domain in domains %}
+
+        <div>
+            <span class="domain-name amber-text text-darken-4">{{ domain.name }}</span>
+
+            <ul class="collapsible" data-collapsible="expandable">
+
+                {% for soft in domain.soft %}
+                    <li class="soft hoverable">
+                        <div class="collapsible-header">
+                            {{ soft.software }}
+
+                            {% if soft.score %}
+                                <div>
+                                    {% if soft.score > 4 %}
+                                        <i class="material-icons">whatshot</i>
+                                    {% endif %}
+                                    <span>{{soft.score}}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="collapsible-body">
+
+                            <ul class="collection">
+
+                                {% for vns in soft.vulnerabilities %}
+                                    <li class="collection-item">
+                                        <a class="" href="https://vulners.com/{{ soft.type }}/{{vns.id}}">
+                                            <span class="title">{{vns.id}}</span>
+                                            <span >{{vns.title}}</span>
+
+                                            <a class="secondary-content"><i class="material-icons">send</i></a>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+
+
+                        </div>
+
+                    </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    {% endfor %}

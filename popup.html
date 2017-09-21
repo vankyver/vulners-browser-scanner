@@ -1,76 +1,50 @@
 <!doctype html>
 <html>
 <head>
-    <title>HTTP Headers</title>
-    <style>
-        html {
-            width: auto;
-        }
+    <title>Vulners web scanner</title>
 
-        body {
-            font-family: "Roboto", Arial, sans-serif;
-            font-size: 100%;
-            min-width: 450px;
-            overflow: scroll;
-            background-color: #fff;
-            color: #38383a;
-            margin: 0;
-        }
-
-        label {
-            display: block;
-            padding: 16px;
-            background-color: #38383A;
-            color: rgb(255, 255, 255);
-        }
-
-        #content {
-            padding: 16px;
-        }
-
-        .soft {
-            margin-top: 8px;
-            padding-left: 16px;
-        }
-
-        .domain {
-            margin: 8px 0;
-        }
-
-        .vulnerability {
-            padding-left: 16px;
-        }
-
-        .vulnerability-id {
-            color: #ff6600;
-        }
-
-        .vulnerability-ttle {
-            padding-left: 16px;
-        }
-
-        .success {
-            background-color: rgba(39, 174, 96, .3);
-        }
-
-        .warning {
-            background-color: rgba(243, 156, 18, .3);
-        }
-
-        .error {
-            background-color: rgba(192, 57, 43, .3);
-        }
-
-    </style>
-    <script src="popup.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+    <link rel="stylesheet" href="css/main.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-<label>
-    SHOW ALL DOMAINS
-    <input id="show_all_content" type="checkbox"/>
-</label>
-<div id="content">
+
+<div id="header">
+    <nav>
+        <div class="nav-wrapper grey darken-3">
+            <ul class="left stat">
+                <li><div> vulnerable <span id="stat-vulnerable"> </span> </div></li>
+                <li><div> scanned <span id="stat-scanned"> </span> </div></li>
+            </ul>
+            <ul class="right ">
+                <li><div>Show all domains</div></li>
+                <li>
+                    <div class="switch">
+                        <label>
+                            <input id="show_all_content" type="checkbox">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </li>
+                <li><i class="material-icons delete">delete</i></li>
+            </ul>
+        </div>
+    </nav>
 </div>
+
+<div id="content">
+    <div class="gap-patch">
+        <div class="circle"></div>
+    </div>
+</div>
+
+<nav>
+</nav>
+<script src="js/ashe.js" type="text/javascript"></script>
+<script src="js/jquery-3.2.1.min.js" type="text/javascript" ></script>
+<script src="js/materialize.min.js" type="text/javascript"></script>
+<script src="js/popup.js" type="text/javascript"></script>
 </body>
 </html>
 

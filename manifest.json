@@ -2,12 +2,17 @@
   "author": "Vulners.com",
   "background": {
     "persistent": true,
-    "scripts": [ "catcher.js" ]
+    "scripts": [ "background.js" ]
+  },
+  "icons": {
+    "128": "icons/icon.png",
+    "48": "icons/icon.png",
+    "16": "icons/icon.png"
   },
   "browser_action": {
     "default_icon": "icons/icon.png",
     "default_popup": "popup.html",
-    "default_title": "View HTTP headers"
+    "default_title": "Vulners web scanner"
   },
   "description": "View and inspect HTTP Headers",
 
