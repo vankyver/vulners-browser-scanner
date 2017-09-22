@@ -1,5 +1,5 @@
 {
-  "author": "Vulners.com",
+  "author": "vulners.com",
   "background": {
     "persistent": true,
     "scripts": [ "background.js" ]
@@ -14,11 +14,11 @@
     "default_popup": "index.html",
     "default_title": "Vulners web scanner"
   },
-  "description": "View and inspect HTTP Headers",
+  "description": "Tiny vulnerability scanner based on vulners.com vulnerability database. Scan websites while you surf internet!",
 
   "manifest_version": 2,
-  "name": "Vulners Headers Scanner",
-  "short_name": "Vulners scanner",
+  "name": "Vulners Web Scanner",
+  "short_name": "Vulners Web scanner",
   "permissions": [ "tabs", "webRequest", "webNavigation", "http://*/*", "https://*/*" ],
-  "version": "1.0.5"
+  "version": "1.0.6"
 }

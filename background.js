@@ -20,8 +20,8 @@ let stat  = lsStat ? JSON.parse(lsStat) : {vulnerable: 0, scanned: 0};
 const REQUEST_TIMEOUT = 300;
 fetchThrottled = throttled(fetchThrottled, REQUEST_TIMEOUT);
 
-const RULES_URL = 'https://vulners.com/api/v3/burp/rules';
-const SCAN_URL  = "https://vulners.com/api/v3/burp/software/";
+const RULES_URL = 'https://vulners.com/api/v3/burp/rules/?utm_source=scanner&utm_medium=chromePlugin&utm_campaign=scan';
+const SCAN_URL  = "https://vulners.com/api/v3/burp/software/?utm_source=scanner&utm_medium=chromePlugin&utm_campaign=scan";
 
 const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/i;
 
