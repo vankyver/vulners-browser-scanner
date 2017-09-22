@@ -49,6 +49,10 @@ const doRender = (response) => {
     }
 
     if (!data[host]) {
+        if (!Object.keys(data).length) {
+            return doRenderContent(templates.help)
+        }
+
         return extractDomain(url) ?
             doRenderContent(templates.none, {}):
             doRenderContent(templates.wrong, {url});

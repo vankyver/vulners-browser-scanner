@@ -18,8 +18,7 @@
 
   "manifest_version": 2,
   "name": "Vulners Headers Scanner",
+  "short_name": "Vulners scanner",
   "permissions": [ "tabs", "webRequest", "webNavigation", "http://*/*", "https://*/*" ],
-  "short_name": "HTTP Headers",
-  "update_url": "https://clients2.google.com/service/update2/crx",
   "version": "1.0.5"
 }

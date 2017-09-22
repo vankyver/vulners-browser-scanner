@@ -33,6 +33,7 @@ const getTemplate = (tpl) => fetch(getUrl(`/templates/${tpl}.hbs`))
 const TEMPLATES = {
     data: getTemplate('data'),
     none: getTemplate('none'),
+    help: getTemplate('help'),
     index: getTemplate('index'),
     wrong: getTemplate('wrong')
 };
@@ -114,6 +115,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case 'clear_data':
             data = {};
             stat = {vulnerable: 0, scanned: 0};
+            localStorage.setItem(LS_KEY, data);
+            localStorage.setItem(LS_KEY_STAT, stat);
             browser.tabs.get(request.tab_id, tab => {
                 sendResponse({tab, data, stat, templates: TEMPLATES})
             });

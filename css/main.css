@@ -23,6 +23,8 @@ body {
     height: 100%;
 }
 
+
+/****** DATA PAGE ******/
 #header .nav-wrapper {
     padding: 0 16px;
 }
@@ -79,7 +81,7 @@ body {
     justify-content: space-between;
 }
 
-/******* INDEX ********/
+/******* INFO PAGES ********/
 #index {
     display: flex;
     flex-direction: column;
@@ -100,7 +102,7 @@ body {
     background: url("/icons/background_new.jpg");
 }
 
-#wrong-url {
+.page-info {
     height: 100%;
     display: flex;
     flex-direction: column;
