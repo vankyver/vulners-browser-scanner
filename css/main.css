@@ -8,12 +8,15 @@ body {
     font-family: "Roboto", sans-serif;
     font-size: 14px;
     min-width: 450px;
+    min-height: 600px;
     overflow-y: hidden;
     height: 100%;
-    min-height: 100%;
     background-color: #fff;
     color: #38383a;
     margin: 0;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .height-100 {
@@ -25,6 +28,7 @@ body {
 }
 
 #content {
+    flex: 1;
     padding: 16px;
     overflow-y: scroll;
     width: 100%;
@@ -32,7 +36,6 @@ body {
 
     -ms-overflow-style: none;
     overflow: -moz-scrollbars-none;
-    margin-bottom: 56px; /* header height */
 }
 #content::-webkit-scrollbar {
     display: none;
@@ -78,10 +81,29 @@ body {
 
 /******* INDEX ********/
 #index {
+    display: flex;
+    flex-direction: column;
+}
+
+#index-content {
     height: 100%;
     padding: 16px;
+    color: white;
+    flex: 1;
 }
 
 #logo {
     max-width: 70%;
+}
+
+.background-image {
+    background: url("/icons/background_new.jpg");
+}
+
+#wrong-url {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

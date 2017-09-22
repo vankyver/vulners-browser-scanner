@@ -97,6 +97,7 @@ browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
  * Message listeners
  */
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log(request)
     switch (request.action) {
         case 'show_vulnerabilities':
             sender.id == browser.runtime.id &&
@@ -104,9 +105,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     sendResponse({tab, data, stat, templates: TEMPLATES})
                 });
             break;
-        case 'set_popup':
+        case 'start':
             browser.browserAction.setPopup({popup: 'popup.html'});
+            sendResponse({url: 'popup.html'});
             break;
+        case 'open_link':
+            return  browser.tabs.create({active: true, url: request.url});
         case 'clear_data':
             data = {};
             stat = {vulnerable: 0, scanned: 0};
@@ -176,6 +180,7 @@ function fetchThrottled(host, rule, version) {
                     let s = i._source;
                     return {
                         id: s.id,
+                        type: s.type,
                         title: s.title === s.id ? s.description : s.title,
                         score: s.cvss.score,
                         scoreColor: getScoreColor(s.cvss.score),

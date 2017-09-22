@@ -5,13 +5,13 @@
     "scripts": [ "background.js" ]
   },
   "icons": {
-    "128": "icons/icon.png",
-    "48": "icons/icon.png",
-    "16": "icons/icon.png"
+    "128": "icons/logo_small.png",
+    "48": "icons/logo_small.png",
+    "16": "icons/logo_small.png"
   },
   "browser_action": {
-    "default_icon": "icons/icon.png",
-    "default_popup": "popup.html",
+    "default_icon": "icons/logo_small.png",
+    "default_popup": "index.html",
     "default_title": "Vulners web scanner"
   },
   "description": "View and inspect HTTP Headers",

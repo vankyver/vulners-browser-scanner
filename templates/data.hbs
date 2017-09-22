@@ -13,7 +13,7 @@
                         {% endif %}
                         ">
                         <div class="collapsible-header">
-                            {{ soft.software }}
+                            {{ soft.software }} - {{soft.version}}
 
                             {% if soft.score %}
                                 <div>
@@ -31,10 +31,10 @@
                                 {% for vns in soft.vulnerabilities %}
                                     <li class="collection-item data-item">
                                         <div>
-                                            <a class="" href="https://vulners.com/{{ soft.type }}/{{vns.id}}">
+                                            <a class="" href="https://vulners.com/{{ vns.type }}/{{vns.id}}">
                                                 <span class="title">{{vns.id}}</span>
                                             </a>
-                                            <span class="truncate data-title">{{vns.title}}</span>
+                                            <span class="truncate data-title ">{{vns.title}}</span>
                                         </div>
                                         <a class="secondary-content">
                                             <span style="font-size: 16px; color:{{vns.scoreColor}}">{{vns.score}}</span>

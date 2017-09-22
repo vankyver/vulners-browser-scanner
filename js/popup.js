@@ -27,6 +27,10 @@ const doRender = (response) => {
     let domains = {};
     let host = url && new URL(url).host;
 
+    if (doRenderIndex()) {
+        return;
+    }
+
     doRenderHeader(stat);
 
     if (isCheckedAll()) {
@@ -68,6 +72,7 @@ const doRenderContent = (template, data) => {
 
     $('.collapsible').collapsible();
     $('.tooltipped').tooltip({delay: 50});
+    document.querySelectorAll('a').forEach(a => a.addEventListener('click', e => openLink(e.target.href || e.target.parentElement.href)))
 };
 
 const doRenderHeader = (stat) => {
@@ -75,16 +80,28 @@ const doRenderHeader = (stat) => {
     document.getElementById('stat-scanned').innerText = stat.scanned;
 };
 
+const doRenderIndex = () => {
+    let startBtn = document.getElementById('start');
+
+    if (!startBtn) return;
+    startBtn.addEventListener('click',
+        () => browser.runtime.sendMessage({action: 'start'}, (resp) => window.location.href = resp.url));
+    document.querySelectorAll('a').forEach(a => a.addEventListener('click', e => openLink(e.target.href || e.target.parentElement.href)))
+    return true;
+};
+
 const onClearClick = () => {
-    browser.tabs.getSelected(null, function (tab) {
-        browser.runtime.sendMessage({action: 'clear_data', tab_id: tab.id}, doRender);
-    });
+    browser.tabs.getSelected(null, tab =>
+        browser.runtime.sendMessage({action: 'clear_data', tab_id: tab.id}, doRender));
 };
 
 const sortSorftByScore = (soft) =>
     Object.keys(soft)
         .sort((a, b) => soft[b].score - soft[a].score)
         .map(s => soft[s]);
+
+const openLink = (url) =>
+    url && browser.runtime.sendMessage({action: 'open_link', url});
 
 /**
  * Checkbox is on/off
