@@ -4,24 +4,22 @@
  * TODO: implement response.alert (injected element onto page with info defined in options)
  */
 
-const isChrome = (/google/i).test(navigator.vendor);
-browser = isChrome ? chrome : browser;
+import {br} from './Browser'
+import {TEMPLATES} from "./Templates";
+import {parse} from "./Ashe";
+
 const DOMAIN_REGEX = /(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/i;
 
 const render = function () {
-    browser.tabs.getSelected(null, function (tab) {
-        browser.runtime.sendMessage(
-            {
-                action: 'show_vulnerabilities',
-                tab_id: tab.id
-            },
-            doRender
-        );
+    br.tabs.getSelected(null, function (tab) {
+        br.runtime.sendMessage( {action: 'show_vulnerabilities', tab_id: tab.id}, doRender);
     });
 };
 
 const doRender = (response) => {
-    const {tab, data, stat, templates} = response;
+    const {tab, data, stat} = response;
+
+    console.log(TEMPLATES)
 
     let url = tab.url;
     let domains = {};
@@ -34,7 +32,7 @@ const doRender = (response) => {
     doRenderHeader(stat);
 
     if (isCheckedAll()) {
-        return doRenderContent(templates.data,
+        return doRenderContent(TEMPLATES.DATA,
             {domains: Object.keys(data)
                 .filter(extractDomain)
                 .sort()
@@ -50,12 +48,12 @@ const doRender = (response) => {
 
     if (!data[host]) {
         if (!Object.keys(data).length) {
-            return doRenderContent(templates.help)
+            return doRenderContent(TEMPLATES.HELP)
         }
 
         return extractDomain(url) ?
-            doRenderContent(templates.none, {}):
-            doRenderContent(templates.wrong, {url});
+            doRenderContent(TEMPLATES.NONE, {}):
+            doRenderContent(TEMPLATES.WRONG, {url});
     }
 
     domains[host] = {
@@ -63,14 +61,14 @@ const doRender = (response) => {
         soft: sortSorftByScore(data[host])
     };
 
-    doRenderContent(templates.data, {domains});
+    doRenderContent(TEMPLATES.DATA, {domains});
 };
 
 /**
  * Set innerHTML of content element
  */
 const doRenderContent = (template, data) => {
-    document.getElementById('content').innerHTML = Ashe.parse(template, data);
+    document.getElementById('content').innerHTML = parse(template, data);
     document.getElementById('show_all_content').addEventListener('click', render);
     document.querySelector('.material-icons.delete').addEventListener('click', onClearClick);
 
@@ -84,19 +82,28 @@ const doRenderHeader = (stat) => {
     document.getElementById('stat-scanned').innerText = stat.scanned;
 };
 
+const doRenderSettings = () => {
+
+
+    doRenderContent(TEMPLATES.SETTINGS);
+    document.querySelector('.material-icons.delete').addEventListener('click', onClearClick);
+};
+
 const doRenderIndex = () => {
     let startBtn = document.getElementById('start');
 
     if (!startBtn) return;
     startBtn.addEventListener('click',
-        () => browser.runtime.sendMessage({action: 'start'}, (resp) => window.location.href = resp.url));
-    document.querySelectorAll('a').forEach(a => a.addEventListener('click', e => openLink(e.target.href || e.target.parentElement.href)))
+        () => br.runtime.sendMessage({action: 'start'}, (resp) => window.location.href = resp.url));
+    document.querySelectorAll('a')
+        .forEach(a => a.addEventListener('click', e => openLink(e.target.href || e.target.parentElement.href)));
+
     return true;
 };
 
 const onClearClick = () => {
-    browser.tabs.getSelected(null, tab =>
-        browser.runtime.sendMessage({action: 'clear_data', tab_id: tab.id}, doRender));
+    br.tabs.getSelected(null, tab =>
+        br.runtime.sendMessage({action: 'clear_data', tab_id: tab.id}, doRender));
 };
 
 const sortSorftByScore = (soft) =>
@@ -105,7 +112,7 @@ const sortSorftByScore = (soft) =>
         .map(s => soft[s]);
 
 const openLink = (url) =>
-    url && browser.runtime.sendMessage({action: 'open_link', url});
+    url && br.runtime.sendMessage({action: 'open_link', url});
 
 /**
  * Checkbox is on/off
@@ -117,4 +124,7 @@ const isCheckedAll = () => document.getElementById('show_all_content').checked;
  */
 const extractDomain = url => url.match(DOMAIN_REGEX);
 
-window.setTimeout(() => render(), 300);
+
+document.addEventListener('DOMContentLoaded', () => window.setTimeout(() => {
+    render()
+}, 300));

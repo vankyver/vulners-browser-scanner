@@ -28,18 +28,23 @@ const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{
 const getUrl = browser.extension.getURL;
 const getTemplate = (tpl) => fetch(getUrl(`/templates/${tpl}.hbs`))
     .then(r => r.text())
-    .then(r => TEMPLATES[tpl] = r);
+    .then(r => TEMPLATES[tpl.toUpperCase()] = r);
 
 const TEMPLATES = {
-    data: getTemplate('data'),
-    none: getTemplate('none'),
-    help: getTemplate('help'),
-    index: getTemplate('index'),
-    wrong: getTemplate('wrong')
+    DATA: getTemplate('data'),
+    NONE: getTemplate('none'),
+    HELP: getTemplate('help'),
+    INDEX: getTemplate('index'),
+    WRONG: getTemplate('wrong'),
+    SETTINGS: getTemplate('settings')
 };
 
 const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
 
+const SETTINGS = {
+    hideNonVulnerable: true,
+    showAllDomains: false
+};
 
 /**
  * Precompile search rules based on list received from server
@@ -101,24 +106,25 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request)
     switch (request.action) {
         case 'show_vulnerabilities':
-            sender.id == browser.runtime.id &&
-                browser.tabs.get(request.tab_id, tab => {
-                    sendResponse({tab, data, stat, templates: TEMPLATES})
-                });
-            break;
+            sender.id == browser.runtime.id && browser.tabs.get(request.tab_id, tab => {
+                sendResponse({data, stat})
+            });
+            return false;
         case 'start':
             browser.browserAction.setPopup({popup: 'popup.html'});
             sendResponse({url: 'popup.html'});
             break;
         case 'open_link':
             return  browser.tabs.create({active: true, url: request.url});
+        case 'get_templates':
+            return  sendResponse({TEMPLATES});
         case 'clear_data':
             data = {};
             stat = {vulnerable: 0, scanned: 0};
             localStorage.setItem(LS_KEY, data);
             localStorage.setItem(LS_KEY_STAT, stat);
             browser.tabs.get(request.tab_id, tab => {
-                sendResponse({tab, data, stat, templates: TEMPLATES})
+                sendResponse({tab, data, stat})
             });
     }
     return true;
