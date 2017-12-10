@@ -1,21 +1,30 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "./Header";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
 
-export default class Layout extends React.Component {
+export default class Layout extends Component {
 
-    render() {
-
-        return <div className="body">
-
-            <Header />
-
-            {this.props.children}
-
-            <Footer/>
-
-        </div>
+    /**
+     * Animation components
+     */
+    componentDidMount () {
+        $('.button-collapse').sideNav({
+                menuWidth: 300, // Default is 300
+                edge: 'right', // Choose the horizontal origin
+                closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                draggable: true, // Choose whether you can drag to open on touch screens,
+            }
+        );
     }
 
+    render () {
+        return <div className="body">
+            <Header/>
+            <Navbar/>
+            {this.props.children}
+            <Footer/>
+        </div>
+    }
 }

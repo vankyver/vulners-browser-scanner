@@ -1,35 +1,27 @@
 import React from 'react';
 import Domain from "./search/Domain";
-import {browser} from '../Browser';
+import {loadData} from "../redux/actions";
+import {connect} from 'react-redux';
+import {mstp} from "../redux/utils";
 
+
+@connect(mstp('data'), {loadData})
 export default class Search extends React.Component {
 
-    static propTypes = {
-        data: React.PropTypes.array.isRequired
-    };
-
-    static defaultProps = {
-        data: []
-    };
-
-    state = {
-        data: [],
-        stats: []
-    };
-
     componentDidMount() {
-        browser.tabs.getSelected(tab => {
-            browser.runtime.sendMessage({action: 'show_vulnerabilities', tab_id: tab.id}, (resp) => {
-                this.setState({...resp})
-            })
-        })
+        this.props.loadData();
+    }
+
+    componentDidUpdate() {
+        $('.tooltipped').tooltip({delay: 50});
+        $('.collapsible').collapsible();
     }
 
     render() {
-        let data = this.state.data;
+        let data = this.props.data || {};
 
         return <div id="index-content" className="center-align">
-            {Object.keys(data).map(name => <Domain name={name} software={data[name]}/>)}
+            {Object.keys(data).map(name => <Domain key={name} name={name} software={data[name]}/>)}
         </div>
     }
 

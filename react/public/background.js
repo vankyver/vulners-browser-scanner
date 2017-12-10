@@ -22,6 +22,11 @@ const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{
 
 const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
 
+const settings = {
+    showOnlyVulnerable: true,
+    showAllDomains: false
+};
+
 /**
  * Precompile search rules based on list received from server
  */
@@ -82,8 +87,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request);
     switch (request.action) {
         case 'show_vulnerabilities':
-            sender.id == browser.runtime.id && browser.tabs.get(request.tab_id, tab => {
-                sendResponse({data, stat})
+            sender.id === browser.runtime.id && browser.tabs.get(request.tab_id, tab => {
+                sendResponse({data, stat, settings})
             });
             break;
         case 'open_link':
