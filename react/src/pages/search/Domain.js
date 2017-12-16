@@ -16,6 +16,7 @@ export default class Domain extends React.Component {
     render() {
         let software = this.props.software;
         let name = this.props.name;
+        console.log(this.props)
 
         return <div key={name} className="center-align">
 

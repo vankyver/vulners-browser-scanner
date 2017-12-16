@@ -59,6 +59,11 @@ if (env === 'production') {
         vendor: ["react", "react-dom"],
         main: './src/index.js',
     };
+    devConfig.devServer = {
+        contentBase: path.join(__dirname, "public"),
+        compress: true,
+        port: 9000
+    }
 }
 
 plugins.push(new webpack.LoaderOptionsPlugin(loaderOptionsConfig));

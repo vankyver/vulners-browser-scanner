@@ -7,9 +7,17 @@ const lsData = localStorage.getItem(LS_KEY);
 const LS_KEY_STAT = 'vulners-chrome-scanner-stat';
 const lsStat = localStorage.getItem(LS_KEY_STAT);
 
+const LS_KEY_SETTINGS = 'vulners-chrome-scanner-settings';
+const lsSettings = localStorage.getItem(LS_KEY_SETTINGS);
+
 const rules = [];
+
 let data  = lsData ? JSON.parse(lsData) : {};
 let stat  = lsStat ? JSON.parse(lsStat) : {vulnerable: 0, scanned: 0};
+let settings = lsSettings ? JSON.parse(lsSettings) : {
+    showOnlyVulnerable: true,
+    showAllDomains: false
+};
 
 // Rewrite fetch to make it with minimal timeout between requests
 const REQUEST_TIMEOUT = 300;
@@ -22,10 +30,6 @@ const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{
 
 const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
 
-const settings = {
-    showOnlyVulnerable: true,
-    showAllDomains: false
-};
 
 /**
  * Precompile search rules based on list received from server
@@ -87,12 +91,17 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request);
     switch (request.action) {
         case 'show_vulnerabilities':
+            console.log('[SHOW VULNS]', data);
             sender.id === browser.runtime.id && browser.tabs.get(request.tab_id, tab => {
-                sendResponse({data, stat, settings})
+                sendResponse({data, stat, settings, url: extractDomain(tab)})
             });
             break;
         case 'open_link':
             return  browser.tabs.create({active: true, url: request.url});
+        case 'change_setting':
+            Object.assign(settings, request.settings);
+            localStorage.setItem(LS_KEY_SETTINGS, JSON.stringify(settings));
+            return sendResponse({settings});
         case 'clear_data':
             data = {};
             stat = {vulnerable: 0, scanned: 0};
@@ -111,32 +120,35 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
  */
 function findFingerprints (response, tabId, callback) {
     let url = extractDomain(response);
-    let host = url && new URL(url[0]).host;
 
     if (!url) return;
 
     let hs = response.responseHeaders.map(r => r.name + ":" + r.value).join('\n');
     for (let rule of rules) {
         let matched = hs.match(rule.jsRegex);
+        let host = data[url];
+        let soft = data[url] && data[url]['software'];
 
         if (!matched) continue;
-        if (data[host] && (data[host][rule.name] || data[host][rule.alias])) continue;
-        if (!data[host]) {
-            data[host] = {}
+        if (soft && (soft[rule.name] || soft[rule.alias]))continue;
+
+        if (!data[url]) {
+            data[url] = {
+                software:{},
+                vulnerable: false
+            }
         }
 
         let version = matched[1];
 
-        if (!data[host][rule.name]) {
-            data[host][rule.name] = {
-                software: rule.name,
-                version: version,
-                vulnerabilities: []
-            }
-        }
+        data[url]['software'][rule.name] = {
+            software: rule.name,
+            version: version,
+            vulnerabilities: []
+        };
 
-        console.log('[Fetch] ', host, {software: rule.name || rule.alias, version: matched[1], type: rule.type});
-        fetchThrottled(host, rule, version)
+        console.log('[Fetch] ', url, {software: rule.name || rule.alias, version: matched[1], type: rule.type});
+        fetchThrottled(url, rule, version)
     }
 }
 
@@ -159,8 +171,7 @@ function fetchThrottled(host, rule, version) {
             let items = r.data.search || [];
 
             // Add vulnerabilities
-            data[host][rule.name]['vulnerabilities'] = items
-                .map(i => {
+            let vulnerabilities = items.map(i => {
                     let s = i._source;
                     return {
                         id: s.id,
@@ -172,15 +183,27 @@ function fetchThrottled(host, rule, version) {
                     }
                 })
                 .sort((a,b) => b.score - a.score);
+            let vulnerable = !!vulnerabilities.length || data[host]['vulnerable'];
+            let score      = vulnerabilities.reduce((a,v) => a > v.score ? a : v.score, 0);
+            let scoreColor = getScoreColor(data[host]['software'][rule.name]['score']);
 
             // Add max score value of soft vulnerability
-            let softVulns = data[host][rule.name]['vulnerabilities'];
-            data[host][rule.name]['score'] = softVulns.reduce((a,v) => a > v.score ? a : v.score, 0);
-            data[host][rule.name]['scoreColor'] = getScoreColor(data[host][rule.name]['score']);
+            data[host] = Object.assign({}, data[host], {
+                vulnerable,
+                software: Object.assign(data[host]['software'], {
+                    [rule.name]: {
+                        score,
+                        scoreColor,
+                        vulnerabilities
+                    }
+                })
+            });
 
             let domainNames = Object.keys(data);
-            stat['scanned'] = domainNames.length;
-            stat['vulnerable'] = domainNames.filter( name => Object.keys(data[name]).find(soft => data[name][soft].score)).length;
+            stat = {
+                scanned: domainNames.length,
+                vulnerable: domainNames.filter( name => Object.keys(data[name]).find(soft => data[name][soft].score)).length
+            };
 
             localStorage.setItem(LS_KEY, JSON.stringify(data));
             localStorage.setItem(LS_KEY_STAT, JSON.stringify(stat));
@@ -189,7 +212,10 @@ function fetchThrottled(host, rule, version) {
 
 const getScoreColor = score => COLORS[Math.round(score) - 1 || 0];
 
-const extractDomain = url => url.url.match(DOMAIN_REGEX);
+const extractDomain = url => {
+    url = url.url.match(DOMAIN_REGEX);
+    return url ? new URL(url[0]).host : null;
+};
 
 /**
  * Pure throttle implementation

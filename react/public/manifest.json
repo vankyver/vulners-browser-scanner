@@ -2,7 +2,7 @@
   "author": "vulners.com",
   "background": {
     "persistent": true,
-    "scripts": [ "background.js" ]
+    "scripts": [ "utils.js", "background.js" ]
   },
   "icons": {
     "128": "img/logo_small.png",
@@ -15,6 +15,13 @@
     "default_title": "Vulners web scanner"
   },
   "description": "Tiny vulnerability scanner based on vulners.com vulnerability database. Scan websites while you surf internet!",
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"]
+    }
+  ],
 
   "manifest_version": 2,
   "name": "Vulners Web Scanner",

@@ -3,10 +3,11 @@ import {
 } from 'redux';
 
 export const vulners = (state = {}, action) => {
-    console.log(action, state);
     switch (action.type) {
+
         case 'LOAD_DATA_RECEIVED':
-            return action;
+            return Object.assign({}, state, action);
+
         default:
             return state;
     }

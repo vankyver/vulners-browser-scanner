@@ -1,6 +1,22 @@
 webpackJsonp([0],{
 
-/***/ 106:
+/***/ 116:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isChrome = /google/i.test(navigator.vendor);
+var browser = isChrome ? chrome : browser;
+
+exports.browser = browser;
+
+/***/ }),
+
+/***/ 117:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65,7 +81,32 @@ exports.default = Footer;
 
 /***/ }),
 
-/***/ 216:
+/***/ 118:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var loadData = exports.loadData = function loadData(vulners) {
+    return {
+        type: 'LOAD_DATA',
+        vulners: vulners
+    };
+};
+
+var changeSettings = exports.changeSettings = function changeSettings(settings) {
+    return {
+        type: 'CHANGE_SETTINGS',
+        settings: settings
+    };
+};
+
+/***/ }),
+
+/***/ 219:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75,13 +116,13 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(74);
+var _reactDom = __webpack_require__(76);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-__webpack_require__(217);
+__webpack_require__(220);
 
-var _App = __webpack_require__(218);
+var _App = __webpack_require__(221);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -93,84 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ 217:
+/***/ 220:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "css/index.css";
 
 /***/ }),
 
-/***/ 218:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _react = __webpack_require__(3);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = __webpack_require__(219);
-
-var _Route = __webpack_require__(62);
-
-var _Route2 = _interopRequireDefault(_Route);
-
-var _Layout = __webpack_require__(246);
-
-var _Layout2 = _interopRequireDefault(_Layout);
-
-var _Main = __webpack_require__(249);
-
-var _Main2 = _interopRequireDefault(_Main);
-
-var _Search = __webpack_require__(250);
-
-var _Search2 = _interopRequireDefault(_Search);
-
-var _Credits = __webpack_require__(285);
-
-var _Credits2 = _interopRequireDefault(_Credits);
-
-var _Switch = __webpack_require__(105);
-
-var _Switch2 = _interopRequireDefault(_Switch);
-
-var _reactRedux = __webpack_require__(107);
-
-var _store = __webpack_require__(286);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function () {
-    return _react2.default.createElement(
-        _reactRedux.Provider,
-        { store: _store.store },
-        _react2.default.createElement(
-            _reactRouterDom.MemoryRouter,
-            null,
-            _react2.default.createElement(
-                _Switch2.default,
-                null,
-                _react2.default.createElement(_Route2.default, { path: '/main', component: _Main2.default }),
-                _react2.default.createElement(
-                    _Layout2.default,
-                    null,
-                    _react2.default.createElement(_Route2.default, { exact: true, path: '/', component: _Search2.default }),
-                    _react2.default.createElement(_Route2.default, { path: '/credits', component: _Credits2.default })
-                )
-            )
-        )
-    );
-};
-
-/***/ }),
-
-/***/ 246:
+/***/ 221:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -187,15 +158,129 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Header = __webpack_require__(247);
+var _reactRouterDom = __webpack_require__(222);
+
+var _Route = __webpack_require__(63);
+
+var _Route2 = _interopRequireDefault(_Route);
+
+var _Layout = __webpack_require__(249);
+
+var _Layout2 = _interopRequireDefault(_Layout);
+
+var _Main = __webpack_require__(282);
+
+var _Main2 = _interopRequireDefault(_Main);
+
+var _Search = __webpack_require__(283);
+
+var _Search2 = _interopRequireDefault(_Search);
+
+var _Credits = __webpack_require__(288);
+
+var _Credits2 = _interopRequireDefault(_Credits);
+
+var _Switch = __webpack_require__(107);
+
+var _Switch2 = _interopRequireDefault(_Switch);
+
+var _reactRedux = __webpack_require__(39);
+
+var _store = __webpack_require__(289);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var App = function (_React$Component) {
+    _inherits(App, _React$Component);
+
+    function App() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, App);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.openLink = function (url) {
+            return url && browser.runtime.sendMessage({ action: 'open_link', url: url });
+        }, _this.render = function () {
+            return _react2.default.createElement(
+                _reactRedux.Provider,
+                { store: _store.store },
+                _react2.default.createElement(
+                    _reactRouterDom.MemoryRouter,
+                    null,
+                    _react2.default.createElement(
+                        _Switch2.default,
+                        null,
+                        _react2.default.createElement(_Route2.default, { path: '/main', component: _Main2.default }),
+                        _react2.default.createElement(
+                            _Layout2.default,
+                            null,
+                            _react2.default.createElement(_Route2.default, { exact: true, path: '/', component: _Search2.default }),
+                            _react2.default.createElement(_Route2.default, { path: '/credits', component: _Credits2.default })
+                        )
+                    )
+                )
+            );
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(App, [{
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            var _this2 = this;
+
+            document.querySelectorAll('a').forEach(function (a) {
+                return a.addEventListener('click', function (e) {
+                    return _this2.openLink(e.target.href || e.target.parentElement.href);
+                });
+            });
+        }
+    }]);
+
+    return App;
+}(_react2.default.Component);
+
+exports.default = App;
+
+/***/ }),
+
+/***/ 249:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Header = __webpack_require__(250);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Footer = __webpack_require__(106);
+var _Footer = __webpack_require__(117);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Navbar = __webpack_require__(248);
+var _Navbar = __webpack_require__(280);
 
 var _Navbar2 = _interopRequireDefault(_Navbar);
 
@@ -252,7 +337,7 @@ exports.default = Layout;
 
 /***/ }),
 
-/***/ 247:
+/***/ 250:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -269,9 +354,9 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(107);
+var _reactRedux = __webpack_require__(39);
 
-var _utils = __webpack_require__(290);
+var _utils = __webpack_require__(68);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -382,7 +467,7 @@ exports.default = Header;
 
 /***/ }),
 
-/***/ 248:
+/***/ 280:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -401,13 +486,15 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(107);
+var _reactRedux = __webpack_require__(39);
 
-var _utils = __webpack_require__(290);
+var _utils = __webpack_require__(68);
 
-var _shallowEqual = __webpack_require__(291);
+var _shallowEqual = __webpack_require__(281);
 
 var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+
+var _actions = __webpack_require__(118);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -419,7 +506,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings')), _dec(_class = (_temp2 = _class2 = function (_Component) {
+var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { changeSettings: _actions.changeSettings }), _dec(_class = (_temp2 = _class2 = function (_Component) {
     _inherits(Navbar, _Component);
 
     function Navbar() {
@@ -439,9 +526,9 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings')), _de
         }, _this.componentWillReceiveProps = function (newProps) {
             return _this.setState(_extends({}, newProps['settings']));
         }, _this.onSettingChange = function (cmp) {
-            var state = _defineProperty({}, cmp, !_this.state[cmp]);
-
-            _this.setState(state);
+            return _this.setState(Object.assign(_this.state, _defineProperty({}, cmp, !_this.state[cmp])), function () {
+                _this.props.changeSettings(_this.state);
+            });
         }, _this.render = function () {
             return _react2.default.createElement(
                 'ul',
@@ -531,7 +618,7 @@ exports.default = Navbar;
 
 /***/ }),
 
-/***/ 249:
+/***/ 282:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -545,11 +632,11 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Footer = __webpack_require__(106);
+var _Footer = __webpack_require__(117);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Link = __webpack_require__(61);
+var _Link = __webpack_require__(62);
 
 var _Link2 = _interopRequireDefault(_Link);
 
@@ -595,7 +682,7 @@ exports.default = function () {
 
 /***/ }),
 
-/***/ 250:
+/***/ 283:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -614,15 +701,15 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Domain = __webpack_require__(251);
+var _Domain = __webpack_require__(284);
 
 var _Domain2 = _interopRequireDefault(_Domain);
 
-var _actions = __webpack_require__(255);
+var _actions = __webpack_require__(118);
 
-var _reactRedux = __webpack_require__(107);
+var _reactRedux = __webpack_require__(39);
 
-var _utils = __webpack_require__(290);
+var _utils = __webpack_require__(68);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -632,7 +719,25 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Search = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('data'), { loadData: _actions.loadData }), _dec(_class = function (_React$Component) {
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var mapStateToProps = function mapStateToProps(state) {
+    console.log('[SEARCH PROPS]', state);
+    var v = state.vulners;
+    var settings = v.settings;
+
+    if (settings) {
+        if (!settings.showAllDomains && v.url) {
+            v.data = _defineProperty({}, v.url, v.data[v.url]);
+        }
+    }
+
+    return {
+        data: v.data
+    };
+};
+
+var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _actions.loadData }), _dec(_class = function (_React$Component) {
     _inherits(Search, _React$Component);
 
     function Search() {
@@ -657,6 +762,7 @@ var Search = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('data'), { loadDa
         value: function render() {
             var data = this.props.data || {};
 
+            console.log('{DATA}', data);
             return _react2.default.createElement(
                 "div",
                 { id: "index-content", className: "center-align" },
@@ -673,7 +779,7 @@ exports.default = Search;
 
 /***/ }),
 
-/***/ 251:
+/***/ 284:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -694,7 +800,7 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Software = __webpack_require__(252);
+var _Software = __webpack_require__(285);
 
 var _Software2 = _interopRequireDefault(_Software);
 
@@ -752,7 +858,7 @@ exports.default = Domain;
 
 /***/ }),
 
-/***/ 252:
+/***/ 285:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,11 +874,11 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Score = __webpack_require__(253);
+var _Score = __webpack_require__(286);
 
 var _Score2 = _interopRequireDefault(_Score);
 
-var _Vulnerability = __webpack_require__(254);
+var _Vulnerability = __webpack_require__(287);
 
 var _Vulnerability2 = _interopRequireDefault(_Vulnerability);
 
@@ -810,7 +916,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 253:
+/***/ 286:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -844,7 +950,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 254:
+/***/ 287:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -896,31 +1002,7 @@ exports.default = function (v) {
 
 /***/ }),
 
-/***/ 255:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var loadData = exports.loadData = function loadData(vulners) {
-    return {
-        type: 'LOAD_DATA',
-        vulners: vulners
-    };
-};
-
-var closeGeod = exports.closeGeod = function closeGeod() {
-    return {
-        type: 'CLOSE_GEOD'
-    };
-};
-
-/***/ }),
-
-/***/ 285:
+/***/ 288:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -968,7 +1050,7 @@ exports.default = Credits;
 
 /***/ }),
 
-/***/ 286:
+/***/ 289:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -980,11 +1062,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.store = undefined;
 exports.configureStore = configureStore;
 
-var _redux = __webpack_require__(65);
+var _redux = __webpack_require__(66);
 
-var _reducers = __webpack_require__(287);
+var _reducers = __webpack_require__(290);
 
-var _dataService = __webpack_require__(288);
+var _dataService = __webpack_require__(291);
 
 var _dataService2 = _interopRequireDefault(_dataService);
 
@@ -1000,7 +1082,7 @@ var store = exports.store = configureStore();
 
 /***/ }),
 
-/***/ 287:
+/***/ 290:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1011,16 +1093,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.reducers = exports.vulners = undefined;
 
-var _redux = __webpack_require__(65);
+var _redux = __webpack_require__(66);
 
 var vulners = exports.vulners = function vulners() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var action = arguments[1];
 
-    console.log(action, state);
     switch (action.type) {
+
         case 'LOAD_DATA_RECEIVED':
-            return action;
+            return Object.assign({}, state, action);
+
         default:
             return state;
     }
@@ -1032,7 +1115,7 @@ var reducers = exports.reducers = (0, _redux.combineReducers)({
 
 /***/ }),
 
-/***/ 288:
+/***/ 291:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1044,23 +1127,32 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _Browser = __webpack_require__(289);
+var _Browser = __webpack_require__(116);
+
+var sendMessage = function sendMessage(message, callback) {
+    _Browser.browser.tabs.getSelected(function (tab) {
+        _Browser.browser.runtime.sendMessage(Object.assign(message, { tab_id: tab.id }), callback);
+    });
+};
 
 exports.default = function (store) {
     return function (next) {
         return function (action) {
 
             next(action);
+
             switch (action.type) {
+
                 case 'LOAD_DATA':
-                    _Browser.browser.tabs.getSelected(function (tab) {
-                        _Browser.browser.runtime.sendMessage({ action: 'show_vulnerabilities', tab_id: tab.id }, function (vulners) {
-                            next(_extends({
-                                type: 'LOAD_DATA_RECEIVED'
-                            }, vulners));
-                        });
+                    return sendMessage({ action: 'show_vulnerabilities' }, function (vulners) {
+                        next(_extends({
+                            type: 'LOAD_DATA_RECEIVED'
+                        }, vulners));
                     });
-                    break;
+
+                case 'CHANGE_SETTINGS':
+                    return sendMessage({ action: 'change_settings', settings: action.settings });
+
             }
         };
     };
@@ -1068,23 +1160,7 @@ exports.default = function (store) {
 
 /***/ }),
 
-/***/ 289:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var isChrome = /google/i.test(navigator.vendor);
-var browser = isChrome ? chrome : browser;
-
-exports.browser = browser;
-
-/***/ }),
-
-/***/ 290:
+/***/ 68:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1095,7 +1171,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.mstp = undefined;
 
-var _Browser = __webpack_require__(289);
+var _Browser = __webpack_require__(116);
 
 /**
  * mapStateToProps
@@ -1116,7 +1192,11 @@ var mstp = function mstp() {
             for (var _iterator = propNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var pn = _step.value;
 
-                newProps[pn] = state.vulners[pn];
+                if (typeof pn === 'function') {
+                    pn(state, ownProps);
+                } else {
+                    newProps[pn] = state.vulners[pn];
+                }
             }
         } catch (err) {
             _didIteratorError = true;
@@ -1141,5 +1221,5 @@ exports.mstp = mstp;
 
 /***/ })
 
-},[216]);
+},[219]);
 //# sourceMappingURL=main.bundle.js.map

@@ -3,6 +3,7 @@ export const loadData = vulners => ({
     vulners,
 });
 
-export const closeGeod = () => ({
-    type: 'CLOSE_GEOD',
+export const changeSettings = settings => ({
+    type: 'CHANGE_SETTINGS',
+    settings,
 });

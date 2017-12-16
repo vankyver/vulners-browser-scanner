@@ -3,9 +3,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {mstp} from "../redux/utils";
 import shallowEqual from "react-redux/src/utils/shallowEqual";
+import {changeSettings} from "../redux/actions";
 
 
-@connect(mstp('settings'))
+@connect(mstp('settings'), {changeSettings})
 export default class Navbar extends Component {
 
     static defaultProps = {settings: {}};
@@ -17,11 +18,10 @@ export default class Navbar extends Component {
 
     componentWillReceiveProps = (newProps) => this.setState({...newProps['settings']});
 
-    onSettingChange = (cmp) => {
-        let state = {[cmp]: !this.state[cmp]};
-
-        this.setState(state)
-    };
+    onSettingChange = (cmp) => this.setState(
+        Object.assign(this.state, {[cmp]: !this.state[cmp]}),
+        () => {this.props.changeSettings(this.state)}
+    );
 
     render = () =>
         <ul id="slide-out" className="side-nav">
@@ -56,4 +56,5 @@ export default class Navbar extends Component {
             <li><div className="divider"/></li>
             <li><a href="#"><i className="material-icons delete">delete</i>Clear all Data</a></li>
         </ul>
+
 }

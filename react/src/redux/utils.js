@@ -8,7 +8,11 @@ const mstp = (...propNames) => {
     return (state, ownProps) => {
         let newProps = {};
         for (let pn of propNames) {
-            newProps[pn] = state.vulners[pn]
+            if (typeof pn === 'function') {
+                pn(state, ownProps)
+            } else {
+                newProps[pn] = state.vulners[pn]
+            }
         }
         return newProps;
     }
