@@ -2,6 +2,7 @@
 
 $color-main: #252527;
 $color-dark: #38383A;
+$color-grey: #f7f7f7;
 $color-accent: #FF6600;
 
 html {
@@ -16,6 +17,9 @@ body {
 
 .body {
   background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #body {
@@ -45,6 +49,7 @@ body {
 /****** DATA PAGE ******/
 #header .nav-wrapper {
   padding: 0 16px;
+  background: url("/img/background_new.jpg") 20%;
 }
 
 #content {
@@ -101,6 +106,21 @@ body {
   justify-content: space-between;
 }
 
+.vulnerability {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+
+  .data-title {
+    color: $color-dark;
+  }
+}
+
+.collection a.collection-item:not(.active):hover {
+  background-color: $color-grey
+}
+
 /******* INFO PAGES ********/
 #index {
   display: flex;
@@ -128,4 +148,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+
+// Scroll Off
+::-webkit-scrollbar {
+  display: none;
 }

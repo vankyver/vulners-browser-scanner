@@ -11,10 +11,10 @@ export default (props) =>
         </div>
 
         <div className="collapsible-body">
-            <ul className="collection">
+            <div className="collection">
                 {props.vulnerabilities.map(v =>
                     <Vulnerability key={v.id} {...v}/>
                 )}
-            </ul>
+            </div>
         </div>
     </li>

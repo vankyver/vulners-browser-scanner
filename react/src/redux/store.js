@@ -6,7 +6,10 @@ export function configureStore(initialState = {}) {
     return createStore(
         reducers,
         initialState,
-        applyMiddleware(dataService)
+        compose(
+            applyMiddleware(dataService),
+            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        )
     )
 }
 

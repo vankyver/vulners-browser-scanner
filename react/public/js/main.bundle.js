@@ -7,22 +7,6 @@ webpackJsonp([0],{
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var isChrome = /google/i.test(navigator.vendor);
-var browser = isChrome ? chrome : browser;
-
-exports.browser = browser;
-
-/***/ }),
-
-/***/ 117:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = undefined;
@@ -81,7 +65,7 @@ exports.default = Footer;
 
 /***/ }),
 
-/***/ 118:
+/***/ 117:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -106,7 +90,7 @@ var changeSettings = exports.changeSettings = function changeSettings(settings) 
 
 /***/ }),
 
-/***/ 219:
+/***/ 218:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -120,9 +104,9 @@ var _reactDom = __webpack_require__(76);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-__webpack_require__(220);
+__webpack_require__(219);
 
-var _App = __webpack_require__(221);
+var _App = __webpack_require__(220);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -134,14 +118,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ 220:
+/***/ 219:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "css/index.css";
 
 /***/ }),
 
-/***/ 221:
+/***/ 220:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -158,25 +142,25 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(222);
+var _reactRouterDom = __webpack_require__(221);
 
 var _Route = __webpack_require__(63);
 
 var _Route2 = _interopRequireDefault(_Route);
 
-var _Layout = __webpack_require__(249);
+var _Layout = __webpack_require__(248);
 
 var _Layout2 = _interopRequireDefault(_Layout);
 
-var _Main = __webpack_require__(282);
+var _Main = __webpack_require__(281);
 
 var _Main2 = _interopRequireDefault(_Main);
 
-var _Search = __webpack_require__(283);
+var _Search = __webpack_require__(282);
 
 var _Search2 = _interopRequireDefault(_Search);
 
-var _Credits = __webpack_require__(288);
+var _Credits = __webpack_require__(287);
 
 var _Credits2 = _interopRequireDefault(_Credits);
 
@@ -186,7 +170,7 @@ var _Switch2 = _interopRequireDefault(_Switch);
 
 var _reactRedux = __webpack_require__(39);
 
-var _store = __webpack_require__(289);
+var _store = __webpack_require__(288);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -211,7 +195,7 @@ var App = function (_React$Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.openLink = function (url) {
-            return url && browser.runtime.sendMessage({ action: 'open_link', url: url });
+            return url && v_browser.runtime.sendMessage({ action: 'open_link', url: url });
         }, _this.render = function () {
             return _react2.default.createElement(
                 _reactRedux.Provider,
@@ -255,7 +239,7 @@ exports.default = App;
 
 /***/ }),
 
-/***/ 249:
+/***/ 248:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -272,15 +256,15 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Header = __webpack_require__(250);
+var _Header = __webpack_require__(249);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Footer = __webpack_require__(117);
+var _Footer = __webpack_require__(116);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Navbar = __webpack_require__(280);
+var _Navbar = __webpack_require__(279);
 
 var _Navbar2 = _interopRequireDefault(_Navbar);
 
@@ -337,7 +321,7 @@ exports.default = Layout;
 
 /***/ }),
 
-/***/ 250:
+/***/ 249:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -467,7 +451,7 @@ exports.default = Header;
 
 /***/ }),
 
-/***/ 280:
+/***/ 279:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -490,11 +474,11 @@ var _reactRedux = __webpack_require__(39);
 
 var _utils = __webpack_require__(68);
 
-var _shallowEqual = __webpack_require__(281);
+var _shallowEqual = __webpack_require__(280);
 
 var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 
-var _actions = __webpack_require__(118);
+var _actions = __webpack_require__(117);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -618,7 +602,7 @@ exports.default = Navbar;
 
 /***/ }),
 
-/***/ 282:
+/***/ 281:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -632,7 +616,7 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Footer = __webpack_require__(117);
+var _Footer = __webpack_require__(116);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -682,7 +666,7 @@ exports.default = function () {
 
 /***/ }),
 
-/***/ 283:
+/***/ 282:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -701,11 +685,11 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Domain = __webpack_require__(284);
+var _Domain = __webpack_require__(283);
 
 var _Domain2 = _interopRequireDefault(_Domain);
 
-var _actions = __webpack_require__(118);
+var _actions = __webpack_require__(117);
 
 var _reactRedux = __webpack_require__(39);
 
@@ -767,7 +751,7 @@ var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _acti
                 "div",
                 { id: "index-content", className: "center-align" },
                 Object.keys(data).map(function (name) {
-                    return _react2.default.createElement(_Domain2.default, { key: name, name: name, software: data[name] });
+                    return _react2.default.createElement(_Domain2.default, { key: name, name: name, software: data[name]['software'] });
                 })
             );
         }
@@ -779,7 +763,7 @@ exports.default = Search;
 
 /***/ }),
 
-/***/ 284:
+/***/ 283:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -800,7 +784,7 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Software = __webpack_require__(285);
+var _Software = __webpack_require__(284);
 
 var _Software2 = _interopRequireDefault(_Software);
 
@@ -826,6 +810,7 @@ var Domain = (_temp = _class = function (_React$Component) {
         value: function render() {
             var software = this.props.software;
             var name = this.props.name;
+            console.log(this.props);
 
             return _react2.default.createElement(
                 'div',
@@ -858,7 +843,7 @@ exports.default = Domain;
 
 /***/ }),
 
-/***/ 285:
+/***/ 284:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -874,11 +859,11 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Score = __webpack_require__(286);
+var _Score = __webpack_require__(285);
 
 var _Score2 = _interopRequireDefault(_Score);
 
-var _Vulnerability = __webpack_require__(287);
+var _Vulnerability = __webpack_require__(286);
 
 var _Vulnerability2 = _interopRequireDefault(_Vulnerability);
 
@@ -916,7 +901,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 286:
+/***/ 285:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -950,7 +935,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 287:
+/***/ 286:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1002,7 +987,7 @@ exports.default = function (v) {
 
 /***/ }),
 
-/***/ 288:
+/***/ 287:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1050,7 +1035,7 @@ exports.default = Credits;
 
 /***/ }),
 
-/***/ 289:
+/***/ 288:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1064,9 +1049,9 @@ exports.configureStore = configureStore;
 
 var _redux = __webpack_require__(66);
 
-var _reducers = __webpack_require__(290);
+var _reducers = __webpack_require__(289);
 
-var _dataService = __webpack_require__(291);
+var _dataService = __webpack_require__(290);
 
 var _dataService2 = _interopRequireDefault(_dataService);
 
@@ -1082,7 +1067,7 @@ var store = exports.store = configureStore();
 
 /***/ }),
 
-/***/ 290:
+/***/ 289:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1115,7 +1100,7 @@ var reducers = exports.reducers = (0, _redux.combineReducers)({
 
 /***/ }),
 
-/***/ 291:
+/***/ 290:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1127,11 +1112,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _Browser = __webpack_require__(116);
+var _Browser = __webpack_require__(291);
 
 var sendMessage = function sendMessage(message, callback) {
-    _Browser.browser.tabs.getSelected(function (tab) {
-        _Browser.browser.runtime.sendMessage(Object.assign(message, { tab_id: tab.id }), callback);
+    _Browser.v_browser.tabs.getSelected(function (tab) {
+        _Browser.v_browser.runtime.sendMessage(Object.assign(message, { tab_id: tab.id }), callback);
     });
 };
 
@@ -1160,6 +1145,22 @@ exports.default = function (store) {
 
 /***/ }),
 
+/***/ 291:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isChrome = /google/i.test(navigator.vendor);
+var v_browser = isChrome ? chrome : browser;
+
+exports.v_browser = v_browser;
+
+/***/ }),
+
 /***/ 68:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1169,10 +1170,6 @@ exports.default = function (store) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.mstp = undefined;
-
-var _Browser = __webpack_require__(116);
-
 /**
  * mapStateToProps
  * @return {function(*, *)}
@@ -1221,5 +1218,5 @@ exports.mstp = mstp;
 
 /***/ })
 
-},[219]);
+},[218]);
 //# sourceMappingURL=main.bundle.js.map

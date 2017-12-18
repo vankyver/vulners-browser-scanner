@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', () =>
-    browser.runtime.sendMessage({ action: 'get_regexp'}, (searchRegex) => {
+    v_browser.runtime.sendMessage({ action: 'get_regexp'}, (searchRegex) => {
         console.log('[MATCH]', searchRegex);
 
         let html = document.body.innerHTML;
@@ -16,6 +16,6 @@ document.addEventListener('DOMContentLoaded', () =>
             })
         }
 
-        matches.length && browser.runtime.sendMessage({ action: 'match', matches: matches});
+        matches.length && v_browser.runtime.sendMessage({ action: 'match', matches: matches});
     })
 );

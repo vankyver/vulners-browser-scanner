@@ -4,20 +4,22 @@ import {loadData} from "../redux/actions";
 import {connect} from 'react-redux';
 import {mstp} from "../redux/utils";
 
-const mapStateToProps = (state) => {
-    console.log('[SEARCH PROPS]', state);
-    let v = state.vulners;
-    let settings = v.settings;
 
-    if (settings) {
-        if (!settings.showAllDomains && v.url) {
-            v.data = {[v.url]: v.data[v.url]}
-        }
+const mapStateToProps = (state, filter) => {
+    console.log('[SEARCH PROPS]', state, filter);
+
+    let {data, settings} = state;
+    data = [].concat(data);
+
+    if (!settings.showAllDomains && settings.url) {
+        data = data[0]
+    }
+    if (settings.showOnlyVulnerable) {
+        data = data.filter(domain => domain.vulnerable)
     }
 
-    return {
-        data: v.data
-    }
+    console.log('[SEARCH PROPS]', data);
+    return {data}
 };
 
 @connect(mapStateToProps, {loadData})
@@ -30,14 +32,15 @@ export default class Search extends React.Component {
     componentDidUpdate() {
         $('.tooltipped').tooltip({delay: 50});
         $('.collapsible').collapsible();
+        Materialize.showStaggeredList('.collapsible')
     }
 
     render() {
-        let data = this.props.data || {};
+        let data = this.props.data || [];
 
         console.log('{DATA}', data);
         return <div id="index-content" className="center-align">
-            {Object.keys(data).map(name => <Domain key={name} name={name} software={data[name]['software']}/>)}
+            {data.map(domain => <Domain key={domain.name} name={domain.name} software={domain['software']}/>)}
         </div>
     }
 

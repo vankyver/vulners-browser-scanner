@@ -13,7 +13,7 @@ import { store } from './redux/store';
 
 export default class App extends React.Component {
 
-    openLink = url => url && browser.runtime.sendMessage({action: 'open_link', url});
+    openLink = url => url && v_browser.runtime.sendMessage({action: 'open_link', url});
 
     componentDidUpdate() {
         document.querySelectorAll('a')

@@ -1,5 +1,5 @@
 const isChrome = (/google/i).test(navigator.vendor);
-const browser = isChrome ? chrome : browser;
+const v_browser = isChrome ? chrome : browser;
 
 /**
  * Sugar
@@ -13,7 +13,7 @@ Array.prototype.addIfNotExist = function (item) {
 /**
  * Pure throttle implementation
  **/
-function throttled(fn, timeout) {
+const throttled = (fn, timeout) => {
     let task, queue = [];
     let lastTaskTime;
 

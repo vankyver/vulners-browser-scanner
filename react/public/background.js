@@ -1,6 +1,3 @@
-const isChrome = (/google/i).test(navigator.vendor);
-const browser = isChrome ? chrome : browser;
-
 const LS_KEY = 'vulners-chrome-scanner';
 const lsData = localStorage.getItem(LS_KEY);
 
@@ -55,13 +52,13 @@ fetch(RULES_URL)
 /**
  * Catch page load responses
  */
-browser.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
+v_browser.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
 
 
 /**
  * Update extension icon with status code badge
  */
-browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
+v_browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
     if (info.status === "complete") {
 
         let host = new URL(tab.url).host;
@@ -69,17 +66,17 @@ browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
 
         if (vlns) {
             //set badge for status code if different than 200 OK
-            Object.keys(vlns).length && browser.browserAction.setBadgeText({
+            Object.keys(vlns).length && v_browser.browserAction.setBadgeText({
                 text : String(Object.keys(vlns).length),
                 tabId: tabId
             });
         }
         // Re-enable the button
-        browser.browserAction.enable(tabId);
+        v_browser.browserAction.enable(tabId);
 
     } else if (info.status === "loading") {
         //disable the button
-        browser.browserAction.disable(tabId);
+        v_browser.browserAction.disable(tabId);
     }
 });
 
@@ -87,17 +84,17 @@ browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
 /**
  * Message listeners
  */
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+v_browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request);
     switch (request.action) {
         case 'show_vulnerabilities':
             console.log('[SHOW VULNS]', data);
-            sender.id === browser.runtime.id && browser.tabs.get(request.tab_id, tab => {
+            sender.id === v_browser.runtime.id && v_browser.tabs.get(request.tab_id, tab => {
                 sendResponse({data, stat, settings, url: extractDomain(tab)})
             });
             break;
         case 'open_link':
-            return  browser.tabs.create({active: true, url: request.url});
+            return  v_browser.tabs.create({active: true, url: request.url});
         case 'change_setting':
             Object.assign(settings, request.settings);
             localStorage.setItem(LS_KEY_SETTINGS, JSON.stringify(settings));
@@ -107,7 +104,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             stat = {vulnerable: 0, scanned: 0};
             localStorage.setItem(LS_KEY, data);
             localStorage.setItem(LS_KEY_STAT, stat);
-            browser.tabs.get(request.tab_id, tab => {
+            v_browser.tabs.get(request.tab_id, tab => {
                 sendResponse({tab, data, stat, templates: TEMPLATES})
             });
     }
@@ -217,29 +214,4 @@ const extractDomain = url => {
     return url ? new URL(url[0]).host : null;
 };
 
-/**
- * Pure throttle implementation
- **/
-function throttled(fn, timeout) {
-    let task, queue = [];
-    let lastTaskTime;
-
-    return function() {
-        let args = arguments;
-        queue.push(fn);
-
-        function next() {
-            if (lastTaskTime && ((new Date().getTime() - lastTaskTime) < timeout)) {
-                setTimeout(() => next(), timeout)
-            } else {
-                lastTaskTime = new Date().getTime();
-                task = queue[0];
-                queue.shift();
-                return task.apply(this, args);
-            }
-        }
-        return next();
-    }
-}
-
-browser.browserAction.setBadgeBackgroundColor({color: '#d35400'});
+v_browser.browserAction.setBadgeBackgroundColor({color: '#d35400'});
