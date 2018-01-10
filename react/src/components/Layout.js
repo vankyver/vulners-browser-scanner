@@ -23,8 +23,10 @@ export default class Layout extends Component {
         return <div className="body">
             <Header/>
             <Navbar/>
-            {this.props.children}
-            <Footer/>
+            <div className="scroll-layout">
+                {this.props.children}
+                <Footer/>
+            </div>
         </div>
     }
 }

@@ -52,7 +52,7 @@ fetch(RULES_URL)
 /**
  * Catch page load responses
  */
-v_browser.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
+v_browser.webRequest.onCompleted.addListener(findFingerprintsInHeaders, { urls : ["http://*/*", "https://*/*"] }, ["responseHeaders"]);
 
 
 /**
@@ -61,14 +61,18 @@ v_browser.webRequest.onCompleted.addListener(findFingerprints, { urls : ["http:/
 v_browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
     if (info.status === "complete") {
 
-        let host = new URL(tab.url).host;
-        let vlns = data[host];
+        let url = new URL(tab.url);
+        let host = data[url.host] || data[url.hostname];
 
-        if (vlns) {
-            //set badge for status code if different than 200 OK
-            Object.keys(vlns).length && v_browser.browserAction.setBadgeText({
-                text : String(Object.keys(vlns).length),
+        if (host) {
+            let software = Object.keys(host.software).length;
+            //set badge for vulnerable status
+            software && v_browser.browserAction.setBadgeText({
+                text : String(software),
                 tabId: tabId
+            });
+            v_browser.browserAction.setBadgeBackgroundColor({
+                color: host.vulnerable ? '#d35400' : '#00c400'
             });
         }
         // Re-enable the button
@@ -88,11 +92,16 @@ v_browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log(request);
     switch (request.action) {
         case 'show_vulnerabilities':
-            console.log('[SHOW VULNS]', data);
             sender.id === v_browser.runtime.id && v_browser.tabs.get(request.tab_id, tab => {
-                sendResponse({data, stat, settings, url: extractDomain(tab)})
+                sendResponse({
+                    data: Object.values(data),
+                    stat,
+                    settings,
+                    url: extractDomain(tab)})
             });
             break;
+        case 'get_regexp':
+            return sendResponse(rules);
         case 'open_link':
             return  v_browser.tabs.create({active: true, url: request.url});
         case 'change_setting':
@@ -104,18 +113,20 @@ v_browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             stat = {vulnerable: 0, scanned: 0};
             localStorage.setItem(LS_KEY, data);
             localStorage.setItem(LS_KEY_STAT, stat);
-            v_browser.tabs.get(request.tab_id, tab => {
+            return v_browser.tabs.get(request.tab_id, tab => {
                 sendResponse({tab, data, stat, templates: TEMPLATES})
             });
+        case 'match':
+            return request.matches.forEach(m => addMatchedFingerprint(m.url, m.rule, m.version))
     }
     return true;
 });
 
 
 /**
- * find software fingerprints by provided response
+ * find software fingerprints by provided response Headers
  */
-function findFingerprints (response, tabId, callback) {
+function findFingerprintsInHeaders (response, tabId, callback) {
     let url = extractDomain(response);
 
     if (!url) return;
@@ -127,29 +138,37 @@ function findFingerprints (response, tabId, callback) {
         let soft = data[url] && data[url]['software'];
 
         if (!matched) continue;
-        if (soft && (soft[rule.name] || soft[rule.alias]))continue;
+        if (soft && (soft[rule.name] || soft[rule.alias])) continue;
 
-        if (!data[url]) {
-            data[url] = {
-                software:{},
-                vulnerable: false
-            }
-        }
-
-        let version = matched[1];
-
-        data[url]['software'][rule.name] = {
-            software: rule.name,
-            version: version,
-            vulnerabilities: []
-        };
-
-        console.log('[Fetch] ', url, {software: rule.name || rule.alias, version: matched[1], type: rule.type});
-        fetchThrottled(url, rule, version)
+        addMatchedFingerprint(url, rule, matched[1])
     }
 }
 
+function addMatchedFingerprint(url, rule, version) {
+    let {name, alias, type} = rule;
+
+    console.log('[Add] ', url, {software: name || alias, version, type: type});
+
+    if (!data[url]) {
+        data[url] = {
+            name: url,
+            software:{},
+            vulnerable: false
+        }
+    }
+
+    data[url]['software'][name] = {
+        software: name,
+        version: version,
+        vulnerabilities: []
+    };
+
+    fetchThrottled(url, rule, version)
+}
+
 function fetchThrottled(host, rule, version) {
+    console.log('[Fetch] ', host, {software: rule.name || rule.alias, version, type: rule.type});
+
     fetch(SCAN_URL, {
         method: 'POST',
         mode: 'cors',
@@ -170,6 +189,7 @@ function fetchThrottled(host, rule, version) {
             // Add vulnerabilities
             let vulnerabilities = items.map(i => {
                     let s = i._source;
+                    console.log('[SOURCE]', "scoreColor", s.cvss.score, getScoreColor(s.cvss.score));
                     return {
                         id: s.id,
                         type: s.type,
@@ -182,18 +202,22 @@ function fetchThrottled(host, rule, version) {
                 .sort((a,b) => b.score - a.score);
             let vulnerable = !!vulnerabilities.length || data[host]['vulnerable'];
             let score      = vulnerabilities.reduce((a,v) => a > v.score ? a : v.score, 0);
-            let scoreColor = getScoreColor(data[host]['software'][rule.name]['score']);
+            let scoreColor = getScoreColor(score);
+
+            console.log('[HOST]________', data[host]);
+            let software = Object.assign({}, data[host]['software'], {
+                [rule.name]: Object.assign(data[host]['software'][rule.name], {
+                    score,
+                    scoreColor,
+                    vulnerabilities
+                })
+            });
+            console.log('[HOST]________', data[host]);
 
             // Add max score value of soft vulnerability
             data[host] = Object.assign({}, data[host], {
                 vulnerable,
-                software: Object.assign(data[host]['software'], {
-                    [rule.name]: {
-                        score,
-                        scoreColor,
-                        vulnerabilities
-                    }
-                })
+                software
             });
 
             let domainNames = Object.keys(data);
@@ -207,7 +231,9 @@ function fetchThrottled(host, rule, version) {
         });
 }
 
-const getScoreColor = score => COLORS[Math.round(score) - 1 || 0];
+const getScoreColor = score => {
+    return COLORS[Math.round(score) - 1 || 0];
+}
 
 const extractDomain = url => {
     url = url.url.match(DOMAIN_REGEX);

@@ -2,12 +2,46 @@ import {
     combineReducers
 } from 'redux';
 
+export const data = (state = [], action) => {
+
+    switch (action.type) {
+
+        case 'LOAD_DATA_RECEIVED':
+            return state.concat(action.data);
+
+        case 'CLEAR_DATA':
+            return [];
+
+        default:
+            return state;
+    }
+
+};
+
+export const stat = (state = {}, action) => {
+
+    switch (action.type) {
+
+        case 'LOAD_DATA_RECEIVED':
+            return Object.assign({}, state, action.stat);
+
+        case 'CLEAR_DATA':
+            return {};
+
+        default:
+            return state;
+    }
+
+};
 
 export const settings = (state = {}, action) => {
 
     switch (action.type) {
+
+        case 'LOAD_DATA_RECEIVED':
+            return Object.assign({}, state, action.settings);
+
         case 'CHANGE_SETTINGS':
-            console.log('=======+>>', action)
             return Object.assign({}, state, action.settings);
 
         default:
@@ -16,13 +50,11 @@ export const settings = (state = {}, action) => {
 
 };
 
-
-export const data = (state = [], action) => {
+export const url = (state = '', action) => {
 
     switch (action.type) {
-
         case 'LOAD_DATA_RECEIVED':
-            return state.concat(action.data);
+            return action.url;
 
         default:
             return state;
@@ -32,5 +64,7 @@ export const data = (state = [], action) => {
 
 export const reducers = combineReducers({
     data,
-    settings
+    settings,
+    stat,
+    url
 });

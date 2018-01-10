@@ -3,10 +3,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {mstp} from "../redux/utils";
 import shallowEqual from "react-redux/src/utils/shallowEqual";
-import {changeSettings} from "../redux/actions";
+import {changeSettings, clearData} from "../redux/actions";
 
 
-@connect(mstp('settings'), {changeSettings})
+@connect(mstp('settings'), {changeSettings, clearData})
 export default class Navbar extends Component {
 
     static defaultProps = {settings: {}};
@@ -54,7 +54,7 @@ export default class Navbar extends Component {
                 </div>
             </li>
             <li><div className="divider"/></li>
-            <li><a href="#"><i className="material-icons delete">delete</i>Clear all Data</a></li>
+            <li><a href="#" onClick={() => this.props.clearData()}><i className="material-icons delete">delete</i>Clear all Data</a></li>
         </ul>
 
 }

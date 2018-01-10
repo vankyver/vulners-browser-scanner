@@ -20,9 +20,6 @@ export default class Header extends Component {
                             <div> vulnerable <span id="stat-vulnerable">{stat.vulnerable}</span></div>
                         </li>
                         <li>
-                            <div> found <span id="stat-vulnerable">{stat.found}</span></div>
-                        </li>
-                        <li>
                             <div> scanned <span id="stat-scanned">{stat.scanned}</span></div>
                         </li>
                     </ul>

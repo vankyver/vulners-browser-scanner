@@ -24,10 +24,10 @@ export default class App extends React.Component {
         <Provider store={store}>
             <MemoryRouter>
                 <Switch>
-                    <Route path="/main" component={Main}/>
+                    <Route exact path="/main" component={Main}/>
                     <Layout>
                         <Route exact path="/" component={Search}/>
-                        <Route path="/credits" component={Credits}/>
+                        <Route exact path="/credits" component={Credits}/>
                     </Layout>
                 </Switch>
             </MemoryRouter>

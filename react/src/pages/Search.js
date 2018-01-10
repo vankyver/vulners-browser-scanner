@@ -1,46 +1,70 @@
-import React from 'react';
-import Domain from "./search/Domain";
-import {loadData} from "../redux/actions";
-import {connect} from 'react-redux';
-import {mstp} from "../redux/utils";
+import React from 'react'
+import Domain from "./search/Domain"
+import NotVulnerable from "./search/placeholder/NotVulnerable"
+import {loadData} from "../redux/actions"
+import {connect} from 'react-redux'
+import SearchField from "./search/SearchField";
 
 
 const mapStateToProps = (state, filter) => {
-    console.log('[SEARCH PROPS]', state, filter);
-
-    let {data, settings} = state;
+    let {data, settings, url} = state;
     data = [].concat(data);
 
-    if (!settings.showAllDomains && settings.url) {
-        data = data[0]
+    if (!settings.showAllDomains && url) {
+        data = data.filter(domain => domain.name === url)
     }
+
     if (settings.showOnlyVulnerable) {
         data = data.filter(domain => domain.vulnerable)
     }
 
-    console.log('[SEARCH PROPS]', data);
-    return {data}
+    console.log('[SEARCH]', data);
+    return {data, settings, url}
 };
+
 
 @connect(mapStateToProps, {loadData})
 export default class Search extends React.Component {
 
-    componentDidMount() {
-        this.props.loadData();
-    }
+    state = {
+        searchValue: ''
+    };
+
+    static propTypes = {
+
+    };
+
+    static defaultPropTypes = {
+        data: [],
+        settings: {}
+    };
+
+    componentDidMount = () => this.props.loadData();
 
     componentDidUpdate() {
-        $('.tooltipped').tooltip({delay: 50});
-        $('.collapsible').collapsible();
-        Materialize.showStaggeredList('.collapsible')
+        // $('.collapsible').forEach(el.collapsible());
     }
 
-    render() {
-        let data = this.props.data || [];
+    onSearchChange(searchValue) {
+        this.setState({searchValue})
+    }
 
-        console.log('{DATA}', data);
+    render () {
+        let {data, settings, url} = this.props;
+        let {searchValue} = this.state;
+
+        if (!data.length) {
+            return <NotVulnerable url={url} data={data}/>
+        }
+
+        if (searchValue) {
+            let re = new RegExp(searchValue, 'ig');
+            data = data.filter(d => re.test(Object.keys(d.software).join() + d.name + d.score));
+        }
+
         return <div id="index-content" className="center-align">
-            {data.map(domain => <Domain key={domain.name} name={domain.name} software={domain['software']}/>)}
+            {settings.showAllDomains && <SearchField onChange={(e) => this.onSearchChange(e.target.value)}/>}
+            {data.map(domain => <Domain key={domain.name} name={domain.name} vulnerable={domain.vulnerable} software={domain['software']}/>)}
         </div>
     }
 

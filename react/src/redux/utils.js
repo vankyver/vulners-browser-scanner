@@ -8,7 +8,6 @@ const mstp = (...propNames) => {
         for (let pn of propNames) {
             newProps[pn] = state[pn]
         }
-        console.log('[PROPS]', newProps);
         return newProps;
     }
 };
