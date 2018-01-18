@@ -41,10 +41,6 @@ export default class Search extends React.Component {
 
     componentDidMount = () => this.props.loadData();
 
-    componentDidUpdate() {
-        // $('.collapsible').forEach(el.collapsible());
-    }
-
     onSearchChange(searchValue) {
         this.setState({searchValue})
     }

@@ -20,7 +20,8 @@ export default store => next => action => {
 
                 settings: {
                     showAllDomains: true,
-                    showOnlyVulnerable: true
+                    showOnlyVulnerable: true,
+                    doExtraScan: true,
                 }
             });
 

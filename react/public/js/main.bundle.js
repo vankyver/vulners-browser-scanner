@@ -502,10 +502,13 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { ch
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Navbar.__proto__ || Object.getPrototypeOf(Navbar)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            doExtraScan: false,
             showAllDomains: false,
             showOnlyVulnerable: false
         }, _this.componentWillReceiveProps = function (newProps) {
             return _this.setState(_extends({}, newProps['settings']));
+        }, _this.componentDidMount = function () {
+            return $(_this.refs.helpExtraScan).tooltip({ delay: 50 });
         }, _this.onSettingChange = function (cmp) {
             return _this.setState(Object.assign(_this.state, _defineProperty({}, cmp, !_this.state[cmp])), function () {
                 _this.props.changeSettings(_this.state);
@@ -513,7 +516,7 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { ch
         }, _this.render = function () {
             return _react2.default.createElement(
                 'ul',
-                { id: 'slide-out', className: 'side-nav' },
+                { id: 'slide-out', className: 'side-nav settings' },
                 _react2.default.createElement(
                     'li',
                     null,
@@ -545,7 +548,7 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { ch
                         _react2.default.createElement(
                             'label',
                             null,
-                            _react2.default.createElement('input', { id: 'show_all_domains', type: 'checkbox', checked: _this.state.showAllDomains, onChange: function onChange() {
+                            _react2.default.createElement('input', { type: 'checkbox', checked: _this.state.showAllDomains, onChange: function onChange() {
                                     return _this.onSettingChange('showAllDomains');
                                 } }),
                             _react2.default.createElement('span', { className: 'lever' }),
@@ -562,7 +565,7 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { ch
                         _react2.default.createElement(
                             'label',
                             null,
-                            _react2.default.createElement('input', { id: 'show_only_vulnerable', type: 'checkbox', checked: _this.state.showOnlyVulnerable, onChange: function onChange() {
+                            _react2.default.createElement('input', { type: 'checkbox', checked: _this.state.showOnlyVulnerable, onChange: function onChange() {
                                     return _this.onSettingChange('showOnlyVulnerable');
                                 } }),
                             _react2.default.createElement('span', { className: 'lever' }),
@@ -570,6 +573,36 @@ var Navbar = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { ch
                         )
                     )
                 ),
+                _react2.default.createElement(
+                    'li',
+                    null,
+                    _react2.default.createElement('div', { className: 'divider' })
+                ),
+                _react2.default.createElement(
+                    'li',
+                    null,
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'switch' },
+                        _react2.default.createElement(
+                            'label',
+                            { className: 'settings-lever-label' },
+                            _react2.default.createElement('input', { type: 'checkbox', checked: _this.state.doExtraScan, onChange: function onChange() {
+                                    return _this.onSettingChange('doExtraScan');
+                                } }),
+                            _react2.default.createElement('span', { className: 'lever' }),
+                            'Do extra scan of resources',
+                            _react2.default.createElement(
+                                'i',
+                                { ref: 'helpExtraScan',
+                                    className: 'material-icons',
+                                    'data-tooltip': 'extension will do second request to receive and parse content of static files' },
+                                'help'
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement('li', { className: 'settings-hero' }),
                 _react2.default.createElement(
                     'li',
                     null,
@@ -753,11 +786,6 @@ var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _acti
     }
 
     _createClass(Search, [{
-        key: "componentDidUpdate",
-        value: function componentDidUpdate() {
-            // $('.collapsible').forEach(el.collapsible());
-        }
-    }, {
         key: "onSearchChange",
         value: function onSearchChange(searchValue) {
             this.setState({ searchValue: searchValue });
@@ -948,6 +976,11 @@ exports.default = function (props) {
                 props.software,
                 " ",
                 props.version ? " - " + props.version : ""
+            ),
+            props.exploit && _react2.default.createElement(
+                "span",
+                null,
+                " HAS EXPLOIT! "
             ),
             _react2.default.createElement(_Score2.default, { score: props.score, scoreColor: props.scoreColor })
         ),
@@ -1462,7 +1495,8 @@ exports.default = function (store) {
 
                         settings: {
                             showAllDomains: true,
-                            showOnlyVulnerable: true
+                            showOnlyVulnerable: true,
+                            doExtraScan: true
                         }
                     });
 

@@ -2,7 +2,7 @@
   "author": "vulners.com",
   "background": {
     "persistent": true,
-    "scripts": [ "utils.js", "background.js" ]
+    "scripts": ["js/punycode.js", "utils.js", "background.js" ]
   },
   "icons": {
     "128": "img/logo_small.png",

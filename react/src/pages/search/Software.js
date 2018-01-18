@@ -8,6 +8,7 @@ export default (props) => {
     return <li key={console.log(props)} className={["soft"].concat(props.score && "hoverable").join(' ')}>
         <div className="collapsible-header">
             <span>{props.software} {props.version ? (" - " + props.version) : ""}</span>
+            {props.exploit && <span> HAS EXPLOIT! </span>}
             <Score score={props.score} scoreColor={props.scoreColor}/>
         </div>
 

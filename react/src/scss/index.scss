@@ -142,6 +142,26 @@ body {
   }
 }
 
+/******* SETTINGS **********/
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  .settings-hero {
+    flex: 1;
+  }
+}
+
+.settings-lever-label {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+
+  .material-icons {
+    margin-left: 16px;
+  }
+}
 
 
 /******* INFO PAGES ********/
