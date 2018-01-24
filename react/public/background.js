@@ -19,7 +19,7 @@ let extraData = lsExtraData ? JSON.parse(lsExtraData) : [];
 let settings = lsSettings ? JSON.parse(lsSettings) : {
     showOnlyVulnerable: true,
     showAllDomains: false,
-    doExtraScan: false
+    doExtraScan: true
 };
 
 // Rewrite fetch to make it with minimal timeout between requests
