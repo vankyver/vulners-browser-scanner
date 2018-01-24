@@ -5,6 +5,15 @@ $color-dark: #38383A;
 $color-grey: #f7f7f7;
 $color-accent: #FF6600;
 
+.color-black {
+  color: $color-main;
+}
+
+.vulners-start-btn {
+  max-width: 190px;
+  margin: 0 auto;
+}
+
 html {
   width: auto;
   height: 100%;

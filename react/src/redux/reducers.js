@@ -62,9 +62,22 @@ export const url = (state = '', action) => {
 
 };
 
+export const landingSeen = (state = '', action) => {
+
+    switch (action.type) {
+        case 'LOAD_DATA_RECEIVED':
+            return action.landingSeen;
+
+        default:
+            return state;
+    }
+
+};
+
 export const reducers = combineReducers({
     data,
     settings,
     stat,
-    url
+    url,
+    landingSeen
 });

@@ -12,3 +12,8 @@ export const changeSettings = settings => ({
     type: 'CHANGE_SETTINGS',
     settings,
 });
+
+export const changeLandingSeen = landingSeen => ({
+    type: 'LANDING_SEEN',
+    landingSeen,
+});

@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 116:
+/***/ 117:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65,7 +65,7 @@ exports.default = Footer;
 
 /***/ }),
 
-/***/ 117:
+/***/ 118:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74,30 +74,102 @@ exports.default = Footer;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var loadData = exports.loadData = function loadData(vulners) {
-    return {
-        type: 'LOAD_DATA',
-        vulners: vulners
-    };
-};
+exports.default = undefined;
 
-var clearData = exports.clearData = function clearData(vulners) {
-    return {
-        type: 'CLEAR_DATA',
-        vulners: vulners
-    };
-};
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var changeSettings = exports.changeSettings = function changeSettings(settings) {
-    return {
-        type: 'CHANGE_SETTINGS',
-        settings: settings
-    };
-};
+var _dec, _class, _class2, _temp2;
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(8);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactRedux = __webpack_require__(17);
+
+var _utils = __webpack_require__(24);
+
+var _actions = __webpack_require__(41);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HiddenSoft = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'), { changeSettings: _actions.changeSettings }), _dec(_class = (_temp2 = _class2 = function (_React$Component) {
+    _inherits(HiddenSoft, _React$Component);
+
+    function HiddenSoft() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, HiddenSoft);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = HiddenSoft.__proto__ || Object.getPrototypeOf(HiddenSoft)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+            showOnlyVulnerable: false
+        }, _this.componentWillReceiveProps = function (newProps) {
+            return _this.setState(_extends({}, newProps['settings']));
+        }, _this.onSettingChange = function () {
+            return _this.setState(Object.assign(_this.state, { showOnlyVulnerable: !_this.state.showOnlyVulnerable }), function () {
+                _this.props.changeSettings(_this.state);
+            });
+        }, _this.render = function () {
+            var _this$props = _this.props,
+                hiddenSoft = _this$props.hiddenSoft,
+                settings = _this$props.settings;
+
+
+            if (!settings.showOnlyVulnerable || !hiddenSoft) {
+                return _react2.default.createElement('span', null);
+            }
+
+            var softLength = Object.values(hiddenSoft.software).filter(function (s) {
+                return !s.vulnerabilities.length;
+            }).length;
+
+            if (!softLength) {
+                return _react2.default.createElement('span', null);
+            }
+
+            return _react2.default.createElement(
+                'span',
+                { className: 'color-black' },
+                _react2.default.createElement('br', null),
+                softLength,
+                ' fingerprint',
+                softLength > 1 && 's',
+                ' ',
+                _react2.default.createElement(
+                    'a',
+                    { href: '#', onClick: function onClick() {
+                            return _this.onSettingChange();
+                        } },
+                    'hidden'
+                )
+            );
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    return HiddenSoft;
+}(_react2.default.Component), _class2.propTypes = {
+    hiddenSoft: _propTypes2.default.any
+}, _temp2)) || _class);
+exports.default = HiddenSoft;
 
 /***/ }),
 
-/***/ 218:
+/***/ 219:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -107,13 +179,13 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(76);
+var _reactDom = __webpack_require__(77);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-__webpack_require__(219);
+__webpack_require__(220);
 
-var _App = __webpack_require__(220);
+var _App = __webpack_require__(221);
 
 var _App2 = _interopRequireDefault(_App);
 
@@ -125,14 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ 219:
+/***/ 220:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "css/index.css";
 
 /***/ }),
 
-/***/ 220:
+/***/ 221:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -149,35 +221,35 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(221);
+var _reactRouterDom = __webpack_require__(222);
 
-var _Route = __webpack_require__(64);
+var _Route = __webpack_require__(65);
 
 var _Route2 = _interopRequireDefault(_Route);
 
-var _Layout = __webpack_require__(248);
+var _Layout = __webpack_require__(249);
 
 var _Layout2 = _interopRequireDefault(_Layout);
 
-var _Main = __webpack_require__(281);
+var _Main = __webpack_require__(282);
 
 var _Main2 = _interopRequireDefault(_Main);
 
-var _Search = __webpack_require__(282);
+var _Search = __webpack_require__(283);
 
 var _Search2 = _interopRequireDefault(_Search);
 
-var _Credits = __webpack_require__(289);
+var _Credits = __webpack_require__(290);
 
 var _Credits2 = _interopRequireDefault(_Credits);
 
-var _Switch = __webpack_require__(107);
+var _Switch = __webpack_require__(108);
 
 var _Switch2 = _interopRequireDefault(_Switch);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _store = __webpack_require__(290);
+var _store = __webpack_require__(291);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -246,7 +318,60 @@ exports.default = App;
 
 /***/ }),
 
-/***/ 248:
+/***/ 24:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+/**
+ * mapStateToProps
+ * @return {function(*, *)}
+ */
+var mstp = function mstp() {
+    for (var _len = arguments.length, propNames = Array(_len), _key = 0; _key < _len; _key++) {
+        propNames[_key] = arguments[_key];
+    }
+
+    return function (state, ownProps) {
+        var newProps = {};
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = propNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var pn = _step.value;
+
+                newProps[pn] = state[pn];
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        return newProps;
+    };
+};
+
+exports.mstp = mstp;
+
+/***/ }),
+
+/***/ 249:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -263,15 +388,15 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Header = __webpack_require__(249);
+var _Header = __webpack_require__(250);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Footer = __webpack_require__(116);
+var _Footer = __webpack_require__(117);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Navbar = __webpack_require__(279);
+var _Navbar = __webpack_require__(280);
 
 var _Navbar2 = _interopRequireDefault(_Navbar);
 
@@ -332,7 +457,7 @@ exports.default = Layout;
 
 /***/ }),
 
-/***/ 249:
+/***/ 250:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -349,9 +474,9 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _utils = __webpack_require__(40);
+var _utils = __webpack_require__(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -448,7 +573,7 @@ exports.default = Header;
 
 /***/ }),
 
-/***/ 279:
+/***/ 280:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -467,15 +592,15 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _utils = __webpack_require__(40);
+var _utils = __webpack_require__(24);
 
-var _shallowEqual = __webpack_require__(280);
+var _shallowEqual = __webpack_require__(281);
 
 var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 
-var _actions = __webpack_require__(117);
+var _actions = __webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -634,7 +759,7 @@ exports.default = Navbar;
 
 /***/ }),
 
-/***/ 281:
+/***/ 282:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -643,62 +768,102 @@ exports.default = Navbar;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = undefined;
+
+var _dec, _class;
 
 var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Footer = __webpack_require__(116);
+var _Footer = __webpack_require__(117);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Link = __webpack_require__(63);
+var _Link = __webpack_require__(64);
 
 var _Link2 = _interopRequireDefault(_Link);
 
+var _utils = __webpack_require__(24);
+
+var _reactRedux = __webpack_require__(17);
+
+var _actions = __webpack_require__(41);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function () {
-    return _react2.default.createElement(
-        "div",
-        { className: "body background-image" },
-        _react2.default.createElement(
-            "div",
-            { id: "index-content", className: "center-align" },
-            _react2.default.createElement(
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Main = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('landingSeen'), { changeLandingSeen: _actions.changeLandingSeen }), _dec(_class = function (_React$Component) {
+    _inherits(Main, _React$Component);
+
+    function Main() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, Main);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Main.__proto__ || Object.getPrototypeOf(Main)).call.apply(_ref, [this].concat(args))), _this), _this.onNextClick = function () {
+            localStorage.setItem('landingSeen', true);
+            _this.props.history.push('/');
+        }, _this.render = function () {
+
+            return _react2.default.createElement(
                 "div",
-                null,
-                _react2.default.createElement("img", { id: "logo", src: "/img/logo_small.png" })
-            ),
-            _react2.default.createElement(
-                "h3",
-                null,
-                "Welcome to Vulners web scanner!"
-            ),
-            _react2.default.createElement(
-                "p",
-                null,
-                "Extension provides ability to passively scan web-sites while you surf internet"
-            ),
-            _react2.default.createElement("br", null),
-            _react2.default.createElement(
-                _Link2.default,
-                { to: "/search", className: "waves-effect waves-light btn-large amber darken-4" },
+                { className: "body background-image" },
                 _react2.default.createElement(
-                    "i",
-                    { className: "material-icons right" },
-                    "arrow_forward"
+                    "div",
+                    { id: "index-content", className: "center-align" },
+                    _react2.default.createElement(
+                        "div",
+                        null,
+                        _react2.default.createElement("img", { id: "logo", src: "/img/logo_small.png" })
+                    ),
+                    _react2.default.createElement(
+                        "h3",
+                        null,
+                        "Welcome to Vulners web scanner!"
+                    ),
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        "Extension provides ability to passively scan web-sites while you surf internet"
+                    ),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement(
+                        _Link2.default,
+                        { to: "#", onClick: function onClick() {
+                                return _this.onNextClick();
+                            }, className: "vulners-start-btn waves-effect waves-light btn-large amber darken-4" },
+                        _react2.default.createElement(
+                            "i",
+                            { className: "material-icons right" },
+                            "arrow_forward"
+                        ),
+                        "Start scan"
+                    )
                 ),
-                "Start scan"
-            )
-        ),
-        _react2.default.createElement(_Footer2.default, null)
-    );
-};
+                _react2.default.createElement(_Footer2.default, null)
+            );
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    return Main;
+}(_react2.default.Component)) || _class);
+exports.default = Main;
 
 /***/ }),
 
-/***/ 282:
+/***/ 283:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -717,19 +882,19 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Domain = __webpack_require__(283);
+var _Domain = __webpack_require__(284);
 
 var _Domain2 = _interopRequireDefault(_Domain);
 
-var _NotVulnerable = __webpack_require__(287);
+var _NotVulnerable = __webpack_require__(288);
 
 var _NotVulnerable2 = _interopRequireDefault(_NotVulnerable);
 
-var _actions = __webpack_require__(117);
+var _actions = __webpack_require__(41);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _SearchField = __webpack_require__(288);
+var _SearchField = __webpack_require__(289);
 
 var _SearchField2 = _interopRequireDefault(_SearchField);
 
@@ -744,14 +909,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var mapStateToProps = function mapStateToProps(state, filter) {
     var data = state.data,
         settings = state.settings,
-        url = state.url;
+        url = state.url,
+        landingSeen = state.landingSeen;
+
+    var domainSoft = url && data.find(function (domain) {
+        return domain.name === url;
+    });
 
     data = [].concat(data);
 
     if (!settings.showAllDomains && url) {
-        data = data.filter(function (domain) {
-            return domain.name === url;
-        });
+        data = domainSoft ? [domainSoft] : [];
     }
 
     if (settings.showOnlyVulnerable) {
@@ -761,7 +929,7 @@ var mapStateToProps = function mapStateToProps(state, filter) {
     }
 
     console.log('[SEARCH]', data);
-    return { data: data, settings: settings, url: url };
+    return { data: data, settings: settings, url: url, domainSoft: domainSoft, landingSeen: landingSeen };
 };
 
 var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _actions.loadData }), _dec(_class = (_temp2 = _class2 = function (_React$Component) {
@@ -781,7 +949,7 @@ var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _acti
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Search.__proto__ || Object.getPrototypeOf(Search)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
             searchValue: ''
         }, _this.componentDidMount = function () {
-            return _this.props.loadData();
+            _this.props.loadData();
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -798,12 +966,18 @@ var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _acti
             var _props = this.props,
                 data = _props.data,
                 settings = _props.settings,
-                url = _props.url;
+                url = _props.url,
+                domainSoft = _props.domainSoft,
+                landingSeen = _props.landingSeen;
             var searchValue = this.state.searchValue;
 
 
+            if (!localStorage.getItem('landingSeen')) {
+                this.props.history.push('/main');
+            }
+
             if (!data.length) {
-                return _react2.default.createElement(_NotVulnerable2.default, { url: url, data: data });
+                return _react2.default.createElement(_NotVulnerable2.default, { url: url, data: data, hiddenSoft: domainSoft });
             }
 
             if (searchValue) {
@@ -820,7 +994,7 @@ var Search = (_dec = (0, _reactRedux.connect)(mapStateToProps, { loadData: _acti
                         return _this2.onSearchChange(e.target.value);
                     } }),
                 data.map(function (domain) {
-                    return _react2.default.createElement(_Domain2.default, { key: domain.name, name: domain.name, vulnerable: domain.vulnerable, software: domain['software'] });
+                    return _react2.default.createElement(_Domain2.default, { key: domain.name, name: domain.name, vulnerable: domain.vulnerable, software: domain['software'], hiddenSoft: domainSoft });
                 })
             );
         }
@@ -835,7 +1009,7 @@ exports.default = Search;
 
 /***/ }),
 
-/***/ 283:
+/***/ 284:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -860,13 +1034,17 @@ var _propTypes = __webpack_require__(8);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _Software = __webpack_require__(284);
+var _Software = __webpack_require__(285);
 
 var _Software2 = _interopRequireDefault(_Software);
 
-var _utils = __webpack_require__(40);
+var _utils = __webpack_require__(24);
+
+var _HiddenSoft = __webpack_require__(118);
+
+var _HiddenSoft2 = _interopRequireDefault(_HiddenSoft);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -896,7 +1074,8 @@ var Domain = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings')), _de
             var _props = this.props,
                 software = _props.software,
                 name = _props.name,
-                settings = _props.settings;
+                settings = _props.settings,
+                hiddenSoft = _props.hiddenSoft;
 
 
             return _react2.default.createElement(
@@ -915,7 +1094,9 @@ var Domain = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings')), _de
                     }).map(function (softName) {
                         return _react2.default.createElement(_Software2.default, _extends({ key: softName, software: softName }, software[softName]));
                     })
-                )
+                ),
+                console.log('[HIDDEN FS]', hiddenSoft),
+                _react2.default.createElement(_HiddenSoft2.default, { hiddenSoft: hiddenSoft })
             );
         }
     }]);
@@ -925,18 +1106,20 @@ var Domain = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings')), _de
     name: _propTypes2.default.string,
     software: _propTypes2.default.object,
     settings: _propTypes2.default.object,
-    vulnerable: _propTypes2.default.bool
+    vulnerable: _propTypes2.default.bool,
+    hiddenSoft: _propTypes2.default.object
 }, _class2.defaultProps = {
     name: '',
     software: {},
     settings: {},
+    hiddenSoft: {},
     vulnerable: false
 }, _temp)) || _class);
 exports.default = Domain;
 
 /***/ }),
 
-/***/ 284:
+/***/ 285:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -952,11 +1135,11 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Score = __webpack_require__(285);
+var _Score = __webpack_require__(286);
 
 var _Score2 = _interopRequireDefault(_Score);
 
-var _Vulnerability = __webpack_require__(286);
+var _Vulnerability = __webpack_require__(287);
 
 var _Vulnerability2 = _interopRequireDefault(_Vulnerability);
 
@@ -1000,7 +1183,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 285:
+/***/ 286:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1034,7 +1217,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 286:
+/***/ 287:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1087,7 +1270,7 @@ exports.default = function (v) {
 
 /***/ }),
 
-/***/ 287:
+/***/ 288:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1104,9 +1287,13 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(23);
+var _reactRedux = __webpack_require__(17);
 
-var _utils = __webpack_require__(40);
+var _utils = __webpack_require__(24);
+
+var _HiddenSoft = __webpack_require__(118);
+
+var _HiddenSoft2 = _interopRequireDefault(_HiddenSoft);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1133,7 +1320,8 @@ var NotVulnerable = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = NotVulnerable.__proto__ || Object.getPrototypeOf(NotVulnerable)).call.apply(_ref, [this].concat(args))), _this), _this.DOMAIN_REGEX = /(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/i, _this.getBody = function () {
             var _this$props = _this.props,
                 url = _this$props.url,
-                data = _this$props.data;
+                data = _this$props.data,
+                hiddenSoft = _this$props.hiddenSoft;
 
 
             switch (url) {
@@ -1150,9 +1338,15 @@ var NotVulnerable = (_dec = (0, _reactRedux.connect)((0, _utils.mstp)('settings'
                     return {
                         icon: 'cloud_done',
                         text: _react2.default.createElement(
-                            'p',
+                            'span',
                             null,
-                            'Seems current host is not Vulnerable'
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                'Seems current host is not Vulnerable'
+                            ),
+                            console.log('[HIDDEN FS]', hiddenSoft),
+                            _react2.default.createElement(_HiddenSoft2.default, { hiddenSoft: hiddenSoft })
                         ),
                         notVulnerableSoft: _this.props.data[url]
                     };
@@ -1185,7 +1379,7 @@ exports.default = NotVulnerable;
 
 /***/ }),
 
-/***/ 288:
+/***/ 289:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1216,7 +1410,7 @@ exports.default = function (props) {
 
 /***/ }),
 
-/***/ 289:
+/***/ 290:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1264,7 +1458,7 @@ exports.default = Credits;
 
 /***/ }),
 
-/***/ 290:
+/***/ 291:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1279,15 +1473,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.configureStore = configureStore;
 
-var _redux = __webpack_require__(67);
+var _redux = __webpack_require__(68);
 
-var _reducers = __webpack_require__(291);
+var _reducers = __webpack_require__(292);
 
-var _dataService = __webpack_require__(292);
+var _dataService = __webpack_require__(293);
 
 var _dataService2 = _interopRequireDefault(_dataService);
 
-var _testDataService = __webpack_require__(294);
+var _testDataService = __webpack_require__(295);
 
 var _testDataService2 = _interopRequireDefault(_testDataService);
 
@@ -1305,7 +1499,7 @@ var store = exports.store = configureStore();
 
 /***/ }),
 
-/***/ 291:
+/***/ 292:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1314,9 +1508,9 @@ var store = exports.store = configureStore();
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.reducers = exports.url = exports.settings = exports.stat = exports.data = undefined;
+exports.reducers = exports.landingSeen = exports.url = exports.settings = exports.stat = exports.data = undefined;
 
-var _redux = __webpack_require__(67);
+var _redux = __webpack_require__(68);
 
 var data = exports.data = function data() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -1386,16 +1580,31 @@ var url = exports.url = function url() {
     }
 };
 
+var landingSeen = exports.landingSeen = function landingSeen() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var action = arguments[1];
+
+
+    switch (action.type) {
+        case 'LOAD_DATA_RECEIVED':
+            return action.landingSeen;
+
+        default:
+            return state;
+    }
+};
+
 var reducers = exports.reducers = (0, _redux.combineReducers)({
     data: data,
     settings: settings,
     stat: stat,
-    url: url
+    url: url,
+    landingSeen: landingSeen
 });
 
 /***/ }),
 
-/***/ 292:
+/***/ 293:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1407,7 +1616,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _Browser = __webpack_require__(293);
+var _Browser = __webpack_require__(294);
 
 var sendMessage = function sendMessage(message, callback) {
     _Browser.v_browser.tabs.getSelected(function (tab) {
@@ -1439,6 +1648,9 @@ exports.default = function (store) {
                 case 'CLEAR_DATA':
                     return sendMessage({ action: 'clear_data', settings: action.settings });
 
+                case 'LANDING_SEEN':
+                    return sendMessage({ action: 'landing_seen', landingSeen: action.landingSeen });
+
             }
         };
     };
@@ -1446,7 +1658,7 @@ exports.default = function (store) {
 
 /***/ }),
 
-/***/ 293:
+/***/ 294:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1462,7 +1674,7 @@ exports.v_browser = v_browser;
 
 /***/ }),
 
-/***/ 294:
+/***/ 295:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1511,7 +1723,7 @@ exports.default = function (store) {
 
 /***/ }),
 
-/***/ 40:
+/***/ 41:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1520,49 +1732,35 @@ exports.default = function (store) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-/**
- * mapStateToProps
- * @return {function(*, *)}
- */
-var mstp = function mstp() {
-    for (var _len = arguments.length, propNames = Array(_len), _key = 0; _key < _len; _key++) {
-        propNames[_key] = arguments[_key];
-    }
-
-    return function (state, ownProps) {
-        var newProps = {};
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = propNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var pn = _step.value;
-
-                newProps[pn] = state[pn];
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-
-        return newProps;
+var loadData = exports.loadData = function loadData(vulners) {
+    return {
+        type: 'LOAD_DATA',
+        vulners: vulners
     };
 };
 
-exports.mstp = mstp;
+var clearData = exports.clearData = function clearData(vulners) {
+    return {
+        type: 'CLEAR_DATA',
+        vulners: vulners
+    };
+};
+
+var changeSettings = exports.changeSettings = function changeSettings(settings) {
+    return {
+        type: 'CHANGE_SETTINGS',
+        settings: settings
+    };
+};
+
+var changeLandingSeen = exports.changeLandingSeen = function changeLandingSeen(landingSeen) {
+    return {
+        type: 'LANDING_SEEN',
+        landingSeen: landingSeen
+    };
+};
 
 /***/ })
 
-},[218]);
+},[219]);
 //# sourceMappingURL=main.bundle.js.map

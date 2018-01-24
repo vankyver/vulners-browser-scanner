@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 import Software from "./Software";
 import {mstp} from "../../redux/utils";
+import HiddenSoft from "./placeholder/HiddenSoft";
 
 @connect(mstp('settings'))
 export default class Domain extends React.Component {
@@ -12,14 +13,16 @@ export default class Domain extends React.Component {
         name: PropTypes.string,
         software: PropTypes.object,
         settings: PropTypes.object,
-        vulnerable: PropTypes.bool
+        vulnerable: PropTypes.bool,
+        hiddenSoft: PropTypes.object
     };
 
     static defaultProps = {
         name: '',
         software: {},
         settings: {},
-        vulnerable: false
+        hiddenSoft: {},
+        vulnerable: false,
     };
 
     componentDidMount() {
@@ -27,7 +30,7 @@ export default class Domain extends React.Component {
     }
 
     render() {
-        let {software, name, settings} = this.props;
+        let {software, name, settings, hiddenSoft} = this.props;
 
         return <div key={name} className="center-align">
 
@@ -38,6 +41,8 @@ export default class Domain extends React.Component {
                     .map(softName => <Software key={softName} software={softName} {...software[softName]}/>
                 )}
             </ul>
+            {console.log('[HIDDEN FS]', hiddenSoft)}
+            <HiddenSoft hiddenSoft={hiddenSoft}/>
 
         </div>
     }

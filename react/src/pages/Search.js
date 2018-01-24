@@ -7,11 +7,13 @@ import SearchField from "./search/SearchField";
 
 
 const mapStateToProps = (state, filter) => {
-    let {data, settings, url} = state;
+    let {data, settings, url, landingSeen} = state;
+    let domainSoft = url && (data.find(domain => domain.name === url));
+
     data = [].concat(data);
 
     if (!settings.showAllDomains && url) {
-        data = data.filter(domain => domain.name === url)
+        data = domainSoft ? [domainSoft] : []
     }
 
     if (settings.showOnlyVulnerable) {
@@ -19,7 +21,7 @@ const mapStateToProps = (state, filter) => {
     }
 
     console.log('[SEARCH]', data);
-    return {data, settings, url}
+    return {data, settings, url, domainSoft, landingSeen}
 };
 
 
@@ -39,18 +41,24 @@ export default class Search extends React.Component {
         settings: {}
     };
 
-    componentDidMount = () => this.props.loadData();
+    componentDidMount = () => {
+        this.props.loadData();
+    };
 
     onSearchChange(searchValue) {
         this.setState({searchValue})
     }
 
     render () {
-        let {data, settings, url} = this.props;
+        let {data, settings, url, domainSoft, landingSeen} = this.props;
         let {searchValue} = this.state;
 
+        if (!localStorage.getItem('landingSeen')) {
+            this.props.history.push('/main')
+        }
+
         if (!data.length) {
-            return <NotVulnerable url={url} data={data}/>
+            return <NotVulnerable url={url} data={data} hiddenSoft={domainSoft}/>
         }
 
         if (searchValue) {
@@ -60,7 +68,7 @@ export default class Search extends React.Component {
 
         return <div id="index-content" className="center-align">
             {settings.showAllDomains && <SearchField onChange={(e) => this.onSearchChange(e.target.value)}/>}
-            {data.map(domain => <Domain key={domain.name} name={domain.name} vulnerable={domain.vulnerable} software={domain['software']}/>)}
+            {data.map(domain => <Domain key={domain.name} name={domain.name} vulnerable={domain.vulnerable} software={domain['software']} hiddenSoft={domainSoft}/>)}
         </div>
     }
 

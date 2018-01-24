@@ -31,6 +31,10 @@ export default store => next => action => {
         case 'CLEAR_DATA':
             return sendMessage({action: 'clear_data', settings: action.settings});
 
+
+        case 'LANDING_SEEN':
+            return sendMessage({action: 'landing_seen', landingSeen: action.landingSeen});
+
     }
 
 };

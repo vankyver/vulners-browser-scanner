@@ -12,6 +12,7 @@ const lsSettings = localStorage.getItem(LS_KEY_SETTINGS);
 
 const rules = [];
 
+let landingSeen = false;
 let data  = lsData ? JSON.parse(lsData) : {};
 let stat  = lsStat ? JSON.parse(lsStat) : {vulnerable: 0, scanned: 0};
 let extraData = lsExtraData ? JSON.parse(lsExtraData) : [];
@@ -28,8 +29,8 @@ fetchThrottled = throttled(fetchThrottled, REQUEST_TIMEOUT);
 const RULES_URL = 'https://vulners.com/api/v3/burp/rules/?utm_source=scanner&utm_medium=chromePlugin&utm_campaign=scan';
 const SCAN_URL  = "https://vulners.com/api/v3/burp/software/?utm_source=scanner&utm_medium=chromePlugin&utm_campaign=scan";
 
-const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/i;
-const PUNYCODE_DOMAIN_REGEX = /http(?:s)?:\/\/(([\w-]{1,63})\.([\w-]{8}))(?:$|\/)/i;
+const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{2,18}))(?:$|\/)/i;
+const PUNYCODE_DOMAIN_REGEX = /http(?:s)?:\/\/(([\w-]{1,63})\.([\w-]{8,15}))(?:$|\/)/i;
 
 const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
 
@@ -77,7 +78,7 @@ v_browser.tabs.onUpdated.addListener(function (tabId, info, tab) {
 });
 
 v_browser.tabs.onActivated.addListener(e => {
-    v_browser.tabs.get(e.tabId, tab => decorateBadge)
+    v_browser.tabs.get(e.tabId, tab => decorateBadge(tab))
 });
 
 function decorateBadge(tab) {
@@ -114,6 +115,7 @@ v_browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     data: Object.values(data),
                     stat,
                     settings,
+                    landingSeen,
                     url: extractDomain(tab)})
             });
             break;
@@ -125,9 +127,12 @@ v_browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             Object.assign(settings, request.settings);
             localStorage.setItem(LS_KEY_SETTINGS, JSON.stringify(settings));
             return sendResponse({settings});
+        case 'landing_seen':
+            return sendResponse(landingSeen = true);
         case 'clear_data':
             data = {};
             extraData = [];
+            landingSeen = false;
             stat = {vulnerable: 0, scanned: 0};
             localStorage.setItem(LS_KEY, data);
             localStorage.setItem(LS_KEY_STAT, stat);
@@ -239,7 +244,7 @@ function fetchThrottled(host, rule, version) {
                         id: s.id,
                         type: s.type,
                         title: s.title === s.id ? s.description : s.title,
-                        score: s.cvss.score,
+                        score: getScore(s),
                         scoreColor: getScoreColor(s.cvss.score),
                         description: s.description
                     }
@@ -276,6 +281,8 @@ function fetchThrottled(host, rule, version) {
         });
 }
 
+const getScore = (item) => Math.max((item.cvss && item.cvss.score || 0 ) , (item.enchantments && item.enchantments.score ? (item.enchantments.score.value) : 0));
+
 const getScoreColor = score => {
     return COLORS[Math.round(score) - 1 || 0];
 };
@@ -290,5 +297,5 @@ const extractDomain = url => {
     }
 };
 
-console.log('[INIT___]')
+console.log('[INIT___]');
 v_browser.browserAction.setBadgeBackgroundColor({color: '#d35400'});
