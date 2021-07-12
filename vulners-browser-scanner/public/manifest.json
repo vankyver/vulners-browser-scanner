@@ -1,0 +1,44 @@
+{
+  "author": "vulners.com",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "img/logo_small.png",
+    "48": "img/logo_small.png",
+    "16": "img/logo_small.png"
+  },
+  "description": "Tiny vulnerability scanner based on vulners.com vulnerability database. Scan websites while you surf internet!",
+
+  "content_scripts": [
+    {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "js": [ "utils.js", "content.js" ]
+    }
+  ],
+
+  "action": {
+    "default_icon": {
+      "16": "img/logo_small.png",
+      "24": "img/logo_small.png",
+      "32": "img/logo_small.png"
+    },
+    "default_title": "Vulners Web Scanner",
+    "default_popup": "index.html"
+  },
+
+  "manifest_version": 3,
+  "name": "Vulners Web Scanner",
+  "short_name": "Vulners Web scanner",
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "http://*/*",
+    "https://*/*",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "version": "2.0.1"
+}
