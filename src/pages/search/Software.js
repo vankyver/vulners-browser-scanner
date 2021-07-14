@@ -18,23 +18,24 @@ const Software = ({software, version, score, scoreColor, exploit, vulnerabilitie
     const classes = useStyles()
     const [open, setOpen] = useState(false)
 
-    return [<ListItem button
-                      key={software+version}
-                      className={classes.content}
-                      onClick={() => setOpen(!open)}>
-        <div>{software} {version ? (" - " + version) : ""}</div>
-        {exploit && <div> HAS EXPLOIT! </div>}
-        <Score score={score} scoreColor={scoreColor}/>
-    </ListItem>,
-    <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-            {vulnerabilities.map(v =>
-                <ListItem>
-                    <Vulnerability key={v.id} {...v}/>
-                </ListItem>
-            )}
-        </List>
-    </Collapse>]
+    return <React.Fragment key={software+version}>
+        <ListItem button={!!vulnerabilities.length}
+                  className={classes.content}
+                  onClick={() => setOpen(!open)}>
+            <div>{software} {version ? (" - " + version) : ""}</div>
+            {exploit && <div> HAS EXPLOIT! </div>}
+            <Score score={score} scoreColor={scoreColor}/>
+        </ListItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+                {vulnerabilities.map(v =>
+                    <ListItem key={v.id} >
+                        <Vulnerability {...v}/>
+                    </ListItem>
+                )}
+            </List>
+        </Collapse>
+    </React.Fragment>
 }
 
 export default Software

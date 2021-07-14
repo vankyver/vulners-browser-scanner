@@ -2,40 +2,51 @@ import React, {Component} from 'react';
 
 import {makeStyles} from "@material-ui/core/styles";
 import {inject, observer} from "mobx-react";
-import {Settings} from "@material-ui/icons";
-import {Box, IconButton, Typography} from "@material-ui/core";
+import {ArrowBack, Settings} from "@material-ui/icons";
+import {Box, IconButton, Link, Typography} from "@material-ui/core";
 
-import Icon from '../img/logo_small.png'
+import Icon from '../img/icon.svg'
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        background: 'url("/img/background_new.jpg") 20%;',
+    header: {
+        background: 'url("/img/background.jpg") 20%;',
         color: theme.palette.secondary.main,
     },
     icon: {
-        width: 32,
-        height: 32,
+        width: 42,
+        height: 42,
     }
 }))
 
-const Header = ({dataStore}) => {
+const Header = ({dataStore, settingsStore}) => {
 
     const classes = useStyles()
 
-    let {stat, settingsOpen} = dataStore
+    let {stat} = dataStore
+    let {open, openSettings, closeSettings} = settingsStore
+    let history = useHistory()
 
-    return <Box display="flex" alignItems="center" justifyContent="space-between" className={classes.root}>
+    return <Box display="flex" alignItems="center" justifyContent="space-between" className={classes.header} pr={1}>
         <Box display="flex" alignItems="center">
             <Box p={1}>
-                <img src={Icon} className={classes.icon}/>
+                {
+                    history.location.pathname === '/about' ?
+                        <IconButton onClick={() => history.push('/')}>
+                            <ArrowBack/>
+                        </IconButton> :
+                        <Link href='https://vulners.com' target='_blank'>
+                            <img src={Icon} className={classes.icon}/>
+                        </Link>
+                }
             </Box>
             <Box variant='body1' ml={2}> vulnerable&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.vulnerable}</Typography></Box>
             <Box variant='body1' ml={2}> scanned&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.scanned}</Typography></Box>
         </Box>
-        <IconButton color='secondary' onClick={() => !settingsOpen ? dataStore.openSettings() : dataStore.closeSettings()}>
+        <IconButton color='secondary' onClick={() => !open ? settingsStore.openSettings() : settingsStore.closeSettings()}>
             <Settings/>
         </IconButton>
     </Box>
 }
 
-export default inject('dataStore')(observer(Header))
+export default inject('dataStore', 'settingsStore')(observer(Header))

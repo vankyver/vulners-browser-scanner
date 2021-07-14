@@ -1,15 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {
-    Box,
     Divider,
     Drawer,
-    FormControlLabel, IconButton,
+    FormControlLabel,
+    IconButton,
     List,
     ListItem,
-    ListItemIcon, ListItemText,
+    ListItemIcon,
+    ListItemText,
     ListSubheader,
-    Switch, Tooltip
+    Switch,
+    Tooltip,
+    Typography
 } from "@material-ui/core";
 import {Close, DeleteOutline, HelpOutline} from "@material-ui/icons";
 import {inject, observer} from "mobx-react";
@@ -20,74 +23,93 @@ import Footer from "./Footer";
 const useStyles = makeStyles(theme => ({
     navbar: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        maxWidth: '50%'
     },
     subheader: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingRight: 4
     },
     spacer: {
         flex:1
+    },
+    listIcon: {
+        minWidth: 'initial'
     }
 }))
 
-const Navbar = ({dataStore}) => {
+const Navbar = ({settingsStore, dataStore}) => {
 
     const classes = useStyles()
-    const {showAllDomains, showOnlyVulnerable, doExtraScan} = dataStore.settings
+    const {showAllDomains, showOnlyVulnerable, doExtraScan, open, theme, THEMES} = settingsStore
 
-    return <Drawer anchor='right' open={dataStore.settingsOpen} onClose={dataStore.closeSettings} className={classes.navbar}>
+    console.log('[THEME]', theme, THEMES)
+
+    return <Drawer anchor='right' open={open} onClose={settingsStore.closeSettings} className={classes.navbar}>
 
         <List subheader={
                 <ListSubheader component="div" className={classes.subheader}>
                     <div>
                         Settings
                     </div>
-                    <IconButton onClick={dataStore.closeSettings}>
+                    <IconButton onClick={settingsStore.closeSettings}>
                         <Close/>
                     </IconButton>
                 </ListSubheader>
             }>
             <ListItem>
                 <FormControlLabel
-                    control={<Switch color='primary' checked={showAllDomains} onChange={dataStore.showAllDomains} name="showAllDomains" />}
+                    control={<Switch color='primary' checked={showAllDomains} onChange={settingsStore.setShowAllDomains} name="showAllDomains" />}
                     label="Show All Domains"
                 />
             </ListItem>
             <ListItem>
                 <FormControlLabel
-                    control={<Switch color='primary' checked={showOnlyVulnerable} onChange={dataStore.showNotVulnerable} name="showOnlyVulnerable" />}
-                    label="Show only vulnerable"
+                    control={<Switch color='primary' checked={showOnlyVulnerable} onChange={settingsStore.setShowNotVulnerable} name="showOnlyVulnerable" />}
+                    label="Show only vulnerable hosts"
                 />
             </ListItem>
             <Divider/>
             <ListItem>
                 <FormControlLabel
-                    control={<Switch color='primary' checked={doExtraScan} onChange={dataStore.doExtraScan} name="doExtraScan" />}
+                    control={<Switch color='primary' checked={doExtraScan} onChange={settingsStore.setDoExtraScan} name="doExtraScan" />}
                     label="Do extra scan of resources"
                 />
                 <Tooltip title="extension will do second request to receive and parse content of static files">
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <HelpOutline/>
                     </ListItemIcon>
                 </Tooltip>
             </ListItem>
             <Divider/>
-            <ListItem button onClick={dataStore.clearData}>
-                <ListItemText>
-                    Clear all scans
-                </ListItemText>
-                <ListItemIcon>
-                    <DeleteOutline/>
-                </ListItemIcon>
+            <ListItem>
+                <FormControlLabel
+                    control={<Switch color='primary' checked={theme === THEMES.DARK} onChange={settingsStore.changeTheme} name="changeTheme" />}
+                    label="Dark Theme"
+                />
             </ListItem>
         </List>
 
         <div className={classes.spacer}/>
 
+        <List>
+            <ListItem button onClick={dataStore.clearData}>
+                <ListItemText>
+                    <Typography align='center'>
+                        Clear all scans
+                    </Typography>
+                </ListItemText>
+                <ListItemIcon className={classes.listIcon}>
+                    <DeleteOutline/>
+                </ListItemIcon>
+            </ListItem>
+        </List>
+
+        <br/>
         <Footer/>
     </Drawer>
 
 }
 
-export default inject('dataStore')(observer(Navbar))
+export default inject('dataStore', 'settingsStore')(observer(Navbar))

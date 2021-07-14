@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MemoryRouter} from 'react-router-dom';
 import Route from "react-router-dom/es/Route";
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -6,41 +6,36 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import Layout from "./components/Layout";
 import Main from "./pages/Main";
 import Search from "./pages/Search";
-import Credits from "./pages/Credits";
+import About from "./pages/About";
 import Switch from "react-router-dom/es/Switch";
 
-import Theme from "./Theme";
-import {Provider} from "mobx-react";
-import DataStore from "./DataStore";
+import {inject, observer} from "mobx-react";
 
-let stores = {
-    dataStore: new DataStore()
-}
+import ThemeLight from "./themes/Light";
+import ThemeDark from "./themes/Dark";
 
 /*global v_browser*/
 
-export default class App extends React.Component {
+const App = ({settingsStore}) => {
 
-    openLink = url => url && v_browser.runtime.sendMessage({action: 'open_link', url});
+    const openLink = url => url && v_browser.runtime.sendMessage({action: 'open_link', url});
 
-    componentDidUpdate() {
+    useEffect(() => {
         document.querySelectorAll('a')
-            .forEach(a => a.addEventListener('click', e => this.openLink(e.target.href || e.target.parentElement.href)));
-    }
+            .forEach(a => a.addEventListener('click', e => openLink(e.target.href || e.target.parentElement.href)));
+    })
 
-    render = () =>
-        <ThemeProvider theme={Theme}>
-            <Provider {...stores}>
-                <MemoryRouter>
-                    <Switch>
-                        <Route exact path="/main" component={Main}/>
-                        <Layout>
-                            <Route exact path="/" component={Search}/>
-                            <Route exact path="/credits" component={Credits}/>
-                        </Layout>
-                    </Switch>
-                </MemoryRouter>
-            </Provider>
-        </ThemeProvider>
+    return <ThemeProvider theme={settingsStore.theme === 'light' ? ThemeLight : ThemeDark}>
+        <MemoryRouter>
+            <Switch>
+                <Layout>
+                    <Route exact path="/main" component={Main}/>
+                    <Route exact path="/" component={Search}/>
+                    <Route exact path="/about" component={About}/>
+                </Layout>
+            </Switch>
+        </MemoryRouter>
+    </ThemeProvider>
 }
 
+export default inject('settingsStore')(observer(App))

@@ -9,8 +9,7 @@ const Theme = createTheme({
         }
     },
     palette: {
-        common: { black: '#000', white: '#fff' },
-        type: 'light',
+        type: 'dark',
         default: {
             main: '#38383a',
             light: '#38383a',
@@ -24,10 +23,10 @@ const Theme = createTheme({
             contrastText: '#fff'
         },
         secondary: {
-            "main": "#fafafa",
-            "light": "#fff",
-            "dark": "#bdbdbd",
-            "contrastText": "#fff"
+            main: "#fafafa",
+            light: "#fff",
+            dark: "#bdbdbd",
+            contrastText: "#fff"
         }
     }
 })

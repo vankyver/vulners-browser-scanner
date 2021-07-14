@@ -15,29 +15,36 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Domain = ({dataStore, name='', software={}, settings={}, hiddenSoft={}, vulnerable=false}) => {
+const Domain = ({settingsStore, name='', software={}, vulnerable=false}) => {
 
     const classes = useStyles()
 
-    const [showOnlyVulnerable, setShowOnlyVulnerable] = useState(settings.showOnlyVulnerable)
+    const [showOnlyVulnerable, setShowOnlyVulnerable] = useState(settingsStore.showOnlyVulnerable)
 
-    return <Box key={name} pr={1} pl={1}>
+    let softToShow = []
+    let softToHide = []
+    if (showOnlyVulnerable) {
+        for (let soft of Object.values(software)) {
+            !!soft.vulnerabilities.length ? softToShow.push(soft) : softToHide.push(soft)
+        }
+    } else {
+        softToShow = Object.values(software)
+    }
+
+    return <Box key={name} pr={1} pl={1} mb={1}>
 
         <Box pt={3} pb={1}>
             <Typography variant='h5' color='primary' align='center' className={classes.header}>{name}</Typography>
         </Box>
         <Paper elevation={3}>
             <List>
-                {Object.keys(software)
-                    .filter(softName => !(showOnlyVulnerable && !software[softName].vulnerabilities.length))
-                    .map(softName => <Software key={softName} software={softName} {...software[softName]}/>
-                )}
+                {softToShow.map(soft => <Software key={soft.software} software={soft.software} {...soft}/>)}
             </List>
 
-            <HiddenSoft showOnlyVulnerable={showOnlyVulnerable} hiddenSoft={hiddenSoft} onClick={() => setShowOnlyVulnerable(!showOnlyVulnerable)}/>
+            {showOnlyVulnerable && <HiddenSoft soft={softToHide} onClick={() => setShowOnlyVulnerable(!showOnlyVulnerable)}/>}
         </Paper>
 
     </Box>
 }
 
-export default inject('dataStore')(observer(Domain))
+export default inject('settingsStore')(observer(Domain))
