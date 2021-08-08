@@ -55,6 +55,7 @@ const Search = ({dataStore, settingsStore}) => {
     }
 
     if (!data.length) {
+        console.log('[NOT VULNERABLE]', url, data, landingSeen)
         return <NotVulnerable url={url} data={data} hiddenSoft={domainSoft}/>
     }
 

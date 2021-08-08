@@ -40,8 +40,8 @@ const Header = ({dataStore, settingsStore}) => {
                         </Link>
                 }
             </Box>
-            <Box variant='body1' ml={2}> vulnerable&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.vulnerable}</Typography></Box>
-            <Box variant='body1' ml={2}> scanned&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.scanned}</Typography></Box>
+            <Box variant='body1' ml={2}> vulnerable&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.vulnerable || 0}</Typography></Box>
+            <Box variant='body1' ml={2}> scanned&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.scanned || 0}</Typography></Box>
         </Box>
         <IconButton color='secondary' onClick={() => !open ? settingsStore.openSettings() : settingsStore.closeSettings()}>
             <Settings/>

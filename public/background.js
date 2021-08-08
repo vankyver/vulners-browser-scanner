@@ -132,6 +132,7 @@ chrome.tabs.onActivated.addListener(e => {
 });
 
 function decorateBadge(tab) {
+    console.log('[BACKGROUND] decorate badge - tab', tab, tab.url)
     let url = new URL(tab.url);
     let host = data[url.host] || data[url.hostname];
 
@@ -146,27 +147,37 @@ function decorateBadge(tab) {
             text : String(vLength || sLength),
             tabId: tab.id
         });
+        console.log('[BACKGROUND] decorate badge -  host.vulnerable', host.vulnerable, sLength, vLength)
         chrome.action.setBadgeBackgroundColor({
             color: host.vulnerable ? '#d35400' : '#00c400'
         });
     }
 }
 
+function getCurrentTab() {
+    return chrome.tabs.query({ active: true, currentWindow: true })
+}
 
 /**
  * Message listeners
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(request);
+    console.log('[ACTION]', request);
     switch (request.action) {
         case 'show_vulnerabilities':
-            sender.id === chrome.runtime.id && chrome.tabs.get(request.tab_id, tab => {
+            sender.id === chrome.runtime.id && getCurrentTab().then(tabs => {
+                console.log('[CURRENT TAB]', tabs, {
+                    data: Object.values(data),
+                    stat,
+                    settings,
+                    landingSeen,
+                    url: extractDomain(tabs[0].url)})
                 sendResponse({
                     data: Object.values(data),
                     stat,
                     settings,
                     landingSeen,
-                    url: extractDomain(tab)})
+                    url: extractDomain(tabs[0].url)})
             });
             break;
         case 'get_regexp':
@@ -189,8 +200,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 [LS_KEY_STAT]: stat,
                 [LS_KEY_EXTRA_DATA]: extraData
             })
-            return chrome.tabs.get(request.tab_id, tab => {
-                sendResponse({tab, data, stat})
+            return getCurrentTab().then(tabs => {
+                sendResponse({tab: tabs[0], data, stat})
             });
         case 'match':
             return request.matches.forEach(m => addMatchedFingerprint(m.url, m.rule, m.version))
@@ -201,8 +212,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 /**
  * find software fingerprints by provided response Headers
  */
-function findFingerprintsInHeaders (response, tabId, callback) {
-    let url = extractDomain(response);
+function findFingerprintsInHeaders (response) {
+    console.log('findFingerprintsInHeaders', response)
+    let url = extractDomain(response.url);
 
     if (!url) return;
 
@@ -342,11 +354,12 @@ const getScoreColor = score => {
 };
 
 const extractDomain = url => {
-    let domain = url.url.match(DOMAIN_REGEX);
+    console.log('[extractDomain]', url)
+    let domain = url.match(DOMAIN_REGEX);
     if (domain) {
         return new URL(domain[0]).host
     } else {
-        domain = url.url.match(PUNYCODE_DOMAIN_REGEX);
+        domain = url.match(PUNYCODE_DOMAIN_REGEX);
         return domain && punycode.toUnicode(domain[1]);
     }
 };

@@ -40,20 +40,30 @@ export default class SettingsStore {
 
     setShowNotVulnerable = () => {
         this.showOnlyVulnerable = !this.showOnlyVulnerable
-        sendMessage({action: 'change_settings', settings: {...this, showOnlyVulnerable: !this.showOnlyVulnerable}})
+        this.saveSettings()
     }
 
     setShowAllDomains = () => {
         this.showAllDomains = !this.showAllDomains
-        sendMessage({action: 'change_settings', settings: {...this, showAllDomains: !this.showAllDomains}})
+        this.saveSettings()
     }
 
     setDoExtraScan = () => {
         this.doExtraScan = !this.doExtraScan
-        sendMessage({action: 'change_settings', settings: {...this, doExtraScan: !this.doExtraScan}})
+        this.saveSettings()
     }
 
     changeTheme = () => {
         this.theme = this.theme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT
+        this.saveSettings()
+    }
+
+    saveSettings = () => {
+        sendMessage({action: 'change_settings', settings: {
+            showOnlyVulnerable: this.showOnlyVulnerable,
+            showAllDomains: this.showAllDomains,
+            doExtraScan: this.doExtraScan,
+            theme: this.theme
+        }})
     }
 }
