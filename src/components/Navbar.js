@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
     Divider,
@@ -14,10 +14,11 @@ import {
     Tooltip,
     Typography
 } from "@material-ui/core";
-import {Close, DeleteOutline, HelpOutline} from "@material-ui/icons";
+import {Close, Code, DeleteOutline, HelpOutline, VpnKey} from "@material-ui/icons";
 import {inject, observer} from "mobx-react";
 import {makeStyles} from "@material-ui/styles";
 import Footer from "./Footer";
+import ApiKeyForm from "./ApiKeyForm";
 
 
 const useStyles = makeStyles(theme => ({
@@ -39,25 +40,23 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Navbar = ({settingsStore, dataStore}) => {
 
-    const classes = useStyles()
-    const {showAllDomains, showOnlyVulnerable, doExtraScan, open, theme, THEMES} = settingsStore
+const Settings = ({settingsStore, dataStore, setApiKeyOpen, classes}) => {
 
+    const {showAllDomains, showOnlyVulnerable, doExtraScan, theme, THEMES} = settingsStore
     console.log('[THEME]', theme, THEMES)
 
-    return <Drawer anchor='right' open={open} onClose={settingsStore.closeSettings} className={classes.navbar}>
-
+    return <React.Fragment>
         <List subheader={
-                <ListSubheader component="div" className={classes.subheader}>
-                    <div>
-                        Settings
-                    </div>
-                    <IconButton onClick={settingsStore.closeSettings}>
-                        <Close/>
-                    </IconButton>
-                </ListSubheader>
-            }>
+            <ListSubheader component="div" className={classes.subheader}>
+                <div>
+                    Settings
+                </div>
+                <IconButton onClick={settingsStore.closeSettings}>
+                    <Close/>
+                </IconButton>
+            </ListSubheader>
+        }>
             <ListItem>
                 <FormControlLabel
                     control={<Switch color='primary' checked={showAllDomains} onChange={settingsStore.setShowAllDomains} name="showAllDomains" />}
@@ -76,7 +75,7 @@ const Navbar = ({settingsStore, dataStore}) => {
                     control={<Switch color='primary' checked={doExtraScan} onChange={settingsStore.setDoExtraScan} name="doExtraScan" />}
                     label="Do extra scan of resources"
                 />
-                <Tooltip title="extension will do second request to receive and parse content of static files">
+                <Tooltip title="extension will do second request to receive and parse content of static files (for example checking the vulnerable CDNs)">
                     <ListItemIcon className={classes.listIcon}>
                         <HelpOutline/>
                     </ListItemIcon>
@@ -94,10 +93,23 @@ const Navbar = ({settingsStore, dataStore}) => {
         <div className={classes.spacer}/>
 
         <List>
+            <ListItem button onClick={() => setApiKeyOpen(true)}>
+                <ListItemText>
+                    <Typography align='center'>
+                        Change API key
+                    </Typography>
+                </ListItemText>
+                <ListItemIcon className={classes.listIcon}>
+                    <VpnKey/>
+                </ListItemIcon>
+            </ListItem>
+        </List>
+
+        <List>
             <ListItem button onClick={dataStore.clearData}>
                 <ListItemText>
                     <Typography align='center'>
-                        Clear all scans
+                        Clear all scans&nbsp;&nbsp;
                     </Typography>
                 </ListItemText>
                 <ListItemIcon className={classes.listIcon}>
@@ -105,7 +117,19 @@ const Navbar = ({settingsStore, dataStore}) => {
                 </ListItemIcon>
             </ListItem>
         </List>
+    </React.Fragment>
+}
 
+const Navbar = ({settingsStore, dataStore}) => {
+
+    const classes = useStyles()
+    const [apiKeyOpen, setApiKeyOpen] = useState(false);
+
+    return <Drawer anchor='right' open={settingsStore.open} onClose={settingsStore.closeSettings} className={classes.navbar}>
+        {apiKeyOpen ?
+            <ApiKeyForm/> :
+            <Settings {...{settingsStore, dataStore, setApiKeyOpen, classes}}/>
+        }
         <br/>
         <Footer/>
     </Drawer>

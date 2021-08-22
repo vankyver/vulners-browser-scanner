@@ -16,7 +16,9 @@ export default class SettingsStore {
     showOnlyVulnerable = false
     showAllDomains = false
     doExtraScan = false
+    apiKey = ''
     theme = THEMES.LIGHT
+    introStep = 0
 
     constructor() {
         makeObservable(this, {
@@ -24,11 +26,14 @@ export default class SettingsStore {
             showOnlyVulnerable: observable,
             showAllDomains: observable,
             doExtraScan: observable,
+            introStep: observable,
+            apiKey: observable,
             theme: observable,
 
             setShowNotVulnerable: action,
             setShowAllDomains: action,
             setDoExtraScan: action,
+            setApiKey: action,
             openSettings: action,
             closeSettings: action
         })
@@ -53,17 +58,40 @@ export default class SettingsStore {
         this.saveSettings()
     }
 
+    setApiKey = (apiKey) => {
+        this.apiKey = apiKey
+        this.saveSettings()
+    }
+
+    loadApiKey = () => {
+        this.doExtraScan = !this.doExtraScan
+        this.saveSettings()
+    }
+
     changeTheme = () => {
         this.theme = this.theme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT
         this.saveSettings()
     }
 
-    saveSettings = () => {
+    setIntroStep = (step) => {
+        this.introStep = step
+    }
+
+    validateAPIKey = (apiKey, cb) => {
+        sendMessage({action: 'validate_key', apiKey}, (response) => {
+            console.log('[VALIDATE_KEY]', response)
+            cb(response)
+        })
+    }
+
+    saveSettings = (cb) => {
         sendMessage({action: 'change_settings', settings: {
             showOnlyVulnerable: this.showOnlyVulnerable,
             showAllDomains: this.showAllDomains,
             doExtraScan: this.doExtraScan,
+            introStep: this.introStep,
+            apiKey: this.apiKey,
             theme: this.theme
-        }})
+        }}, cb)
     }
 }

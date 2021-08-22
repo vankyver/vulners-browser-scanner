@@ -30,10 +30,6 @@ const Search = ({dataStore, settingsStore}) => {
     const [searchValue, setSearchValue] = useState()
 
     useEffect(() => {
-        dataStore.loadData()
-    }, [])
-
-    useEffect(() => {
         setSearchValue('')
     }, [settingsStore.showOnlyVulnerable, settingsStore.showAllDomains])
 

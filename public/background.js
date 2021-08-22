@@ -66,7 +66,8 @@ storage.get({[LS_KEY_SETTINGS]: {}}, (keys) => {
         settings = {
             showOnlyVulnerable: true,
             showAllDomains: false,
-            doExtraScan: true
+            doExtraScan: true,
+            apiKey: ''
         }
     }
 })
@@ -205,8 +206,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         case 'match':
             return request.matches.forEach(m => addMatchedFingerprint(m.url, m.rule, m.version))
+        case 'validate_key':
+            validateKey(request.apiKey).then((r) => {
+                sendResponse({...r.data})
+            })
+            break
     }
-    return true;
+    return true // https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-484772327
 });
 
 /**
@@ -288,7 +294,8 @@ function fetchThrottled(host, rule, version) {
         mode: 'cors',
         redirect: 'follow',
         headers: new Headers({
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': 'Vulners-Web-Extension/3.0'
         }),
         body: JSON.stringify({
             software: rule.alias,
@@ -345,6 +352,14 @@ function fetchThrottled(host, rule, version) {
                 [LS_KEY_STAT]: JSON.stringify(stat)
             })
         });
+}
+
+function validateKey(apiKey, cb) {
+    return fetch('https://vulners.com/api/v3/apiKey/valid/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({keyID: apiKey})
+    }).then(r => r.json())
 }
 
 const getScore = (item) => Math.max((item.cvss && item.cvss.score || 0 ) , (item.enchantments && item.enchantments.score ? (item.enchantments.score.value) : 0));
