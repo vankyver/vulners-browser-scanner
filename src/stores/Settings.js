@@ -37,6 +37,15 @@ export default class SettingsStore {
             openSettings: action,
             closeSettings: action
         })
+        try {
+            chrome.runtime.onMessage.addListener((message, sender) => {
+                if (message.action === 'settings') {
+                    Object.assign(this, message.settings)
+                }
+            })
+        } catch (e) {
+            console.error('[Settings]', e)
+        }
     }
 
     closeSettings = () => this.open = false
@@ -75,6 +84,7 @@ export default class SettingsStore {
 
     setIntroStep = (step) => {
         this.introStep = step
+        this.saveSettings()
     }
 
     validateAPIKey = (apiKey, cb) => {

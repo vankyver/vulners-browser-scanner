@@ -9,6 +9,7 @@ export default class DataStore {
     stat = []
     settings = {}
     landingSeen = false
+    loaded = false
 
     settingsStore = null
 
@@ -19,6 +20,7 @@ export default class DataStore {
             data: observable,
             stat: observable,
             landingSeen: observable,
+            loaded: observable,
 
             loadData: action,
             clearData: action,
@@ -37,6 +39,7 @@ export default class DataStore {
         });
         Object.assign(this, data)
         Object.assign(this.settingsStore, data.settings)
+        this.loaded = true
     });
 
     clearData = () => sendMessage({action: 'clear_data', settings: {}});

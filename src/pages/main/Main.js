@@ -19,6 +19,7 @@ import {ArrowDownward, ArrowForward, ExpandMore, HelpOutline} from "@material-ui
 import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import Logo from '../../img/logo.svg'
+import {set} from "mobx";
 
 const useStyles = makeStyles(theme => ({
     main: {
@@ -103,7 +104,7 @@ const StepSettings = ({classes, onNextClick, settingsStore}) => {
     </Box>
 }
 
-const SERVER_URL = "http://127.0.0.1:9001"; // "https://vulners.com"
+const SERVER_URL = "https://vulners.com"
 const StepAPIKey = ({classes, onNextClick, settingsStore}) => {
     const [apiKey, setApiKey] = useState(settingsStore.apiKey)
     const [apiKeyError, setApiKeyError] = useState('')
@@ -154,7 +155,7 @@ const StepAPIKey = ({classes, onNextClick, settingsStore}) => {
                     </ListItemIcon>
                 </ListItem>
                 <Collapse in={fieldOpen}>
-                    <Typography variant='body2'>
+                    <Typography variant='body2' component='div'>
                         <ul>
                             <li>Go to <a href='https://vulners.com/api-keys' target='_blank' className={classes.link}>vulners.com/api-keys</a></li>
                             <li>Create API Key with scope <i>scan</i> or use WebExtension Template</li>
@@ -177,15 +178,6 @@ const StepAPIKey = ({classes, onNextClick, settingsStore}) => {
     </Box>
 }
 
-const StepHelp = () => {
-
-    return <Box display='flex' justifyContent='center' alignItems='center' flexDirection='column' flex={1} p={1} m={1}>
-        <Paper>
-
-        </Paper>
-    </Box>
-}
-
 const Main = ({settingsStore, dataStore}) =>  {
 
     const classes = useStyles()
@@ -200,6 +192,7 @@ const Main = ({settingsStore, dataStore}) =>  {
         setActiveStep(activeStep - 1)
     }
 
+    console.log('[INTRO STEP]', settingsStore.introStep)
     const [activeStep, setActiveStep] = useState(settingsStore.introStep)
     const getStepContent = () => {
         switch (activeStep) {
@@ -209,16 +202,23 @@ const Main = ({settingsStore, dataStore}) =>  {
                 return <StepSettings {...{classes, onNextClick, settingsStore}}/>
             case 2:
                 return <StepAPIKey {...{classes, onNextClick, settingsStore}}/>
-            case 3:
-                return <StepHelp {...{classes, onNextClick}}/>
             default:
                 return <StepWelcome {...{classes, onNextClick}}/>
         }
     }
 
+    // useEffect(() => {
+    //     !settingsStore.apiKey && settingsStore.introStep && settingsStore.setIntroStep(activeStep)
+    //     console.log('[activeStep]', activeStep)
+    // }, [activeStep])
+
     useEffect(() => {
-        activeStep === 3 && dataStore.setLandingSeen()
-    }, [activeStep])
+        settingsStore.apiKey && history.push('/')
+    }, [settingsStore.apiKey])
+
+    // useEffect(() => {
+    //     !settingsStore.apiKey && settingsStore.introStep && setActiveStep(settingsStore.introStep)
+    // }, [settingsStore.introStep])
 
     return <Box className={classes.main}>
 

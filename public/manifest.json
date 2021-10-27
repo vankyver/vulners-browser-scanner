@@ -10,6 +10,10 @@
   },
   "description": "Tiny vulnerability scanner based on vulners.com vulnerability database. Passively scan websites while you surf internet!",
 
+  "externally_connectable": {
+    "matches": ["https://*.vulners.com/*", "http://127.0.0.1:9001/*"]
+  },
+
   "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],

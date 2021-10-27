@@ -67,7 +67,8 @@ storage.get({[LS_KEY_SETTINGS]: {}}, (keys) => {
             showOnlyVulnerable: true,
             showAllDomains: false,
             doExtraScan: true,
-            apiKey: ''
+            apiKey: '',
+            introStep: 0
         }
     }
 })
@@ -152,6 +153,10 @@ function decorateBadge(tab) {
         chrome.action.setBadgeBackgroundColor({
             color: host.vulnerable ? '#d35400' : '#00c400'
         });
+        chrome.action.setTitle({
+            title: host.vulnerable ?
+                `Host has ${vLength} vulnerabilities` :
+                sLength ? `Found ${sLength} software fingerprints` : `Host not vulnerable`})
     }
 }
 
@@ -167,18 +172,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
         case 'show_vulnerabilities':
             sender.id === chrome.runtime.id && getCurrentTab().then(tabs => {
-                console.log('[CURRENT TAB]', tabs, {
-                    data: Object.values(data),
-                    stat,
-                    settings,
-                    landingSeen,
-                    url: extractDomain(tabs[0].url)})
-                sendResponse({
-                    data: Object.values(data),
-                    stat,
-                    settings,
-                    landingSeen,
-                    url: extractDomain(tabs[0].url)})
+                try {
+                    console.log('[ACTION] show vulnerabilities', tabs, { data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0].url)})
+                    sendResponse({ data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0].url)})
+                } catch (e) {
+                    console.error('[ACTION] show vulnerabilities', e)
+                }
             });
             break;
         case 'get_regexp':
@@ -196,10 +195,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             extraData = [];
             landingSeen = false;
             stat = {vulnerable: 0, scanned: 0};
+            settings = {
+                showOnlyVulnerable: true,
+                showAllDomains: false,
+                doExtraScan: true,
+                introStep: 0
+            };
             storage.set({
                 [LS_KEY_DATA]: data,
                 [LS_KEY_STAT]: stat,
-                [LS_KEY_EXTRA_DATA]: extraData
+                [LS_KEY_EXTRA_DATA]: extraData,
             })
             return getCurrentTab().then(tabs => {
                 sendResponse({tab: tabs[0], data, stat})
@@ -216,10 +221,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 /**
+ * Message listeners
+ */
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+    if ((sender.origin !== "https://vulners.com") && (sender.origin !== "http://127.0.0.1:9001")) {
+        return console.error('[EXTERNAL MESSAGE] forbidden sender', sender)
+    }
+    switch (request.action) {
+        case 'set_key':
+            console.log('[SET API KEY]', request, sender)
+            if (!request.apiKey) {
+                return console.error('[SET API KEY] key can not be null', request)
+            }
+            storage.get({[LS_KEY_SETTINGS]: {}}, (keys) => {
+                try {
+                    let settings = JSON.parse(keys[LS_KEY_SETTINGS])
+                    settings.apiKey = request.apiKey
+                    storage.set({[LS_KEY_SETTINGS]: JSON.stringify(settings)});
+                    console.log('[SET API KEY] sending response', settings)
+                    sendResponse({success: true})
+                    chrome.runtime.sendMessage({action: 'settings', settings})
+                } catch (e) {
+                    console.error('[SET API KEY]', e)
+                    sendResponse({success: false})
+                }
+            })
+            break
+        default:
+            console.log('[EXTERNAL MESSAGE] empty action', request)
+    }
+    return true
+})
+
+
+/**
  * find software fingerprints by provided response Headers
  */
 function findFingerprintsInHeaders (response) {
-    console.log('findFingerprintsInHeaders', response)
     let url = extractDomain(response.url);
 
     if (!url) return;
@@ -300,7 +338,8 @@ function fetchThrottled(host, rule, version) {
         body: JSON.stringify({
             software: rule.alias,
             version: version,
-            type: rule.type
+            type: rule.type,
+            apiKey: settings.apiKey
         })
     })
         .then(r => r.json())

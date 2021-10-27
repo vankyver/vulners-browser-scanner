@@ -1,18 +1,19 @@
 import React, {useEffect} from 'react';
 import {MemoryRouter} from 'react-router-dom';
-import Route from "react-router-dom/es/Route";
+import {Switch, Route} from "react-router-dom";
+
 import { ThemeProvider } from '@material-ui/core/styles';
 
 import Layout from "./components/Layout";
 import Main from "./pages/main/Main";
 import Search from "./pages/Search";
 import About from "./pages/About";
-import Switch from "react-router-dom/es/Switch";
 
 import {inject, observer} from "mobx-react";
 
 import ThemeLight from "./themes/Light";
 import ThemeDark from "./themes/Dark";
+import {CircularProgress} from "@material-ui/core";
 
 /*global v_browser*/
 
@@ -28,6 +29,12 @@ const App = ({settingsStore, dataStore}) => {
     useEffect(() => {
         dataStore.loadData()
     }, [])
+
+    if (!dataStore.loaded) {
+        return <ThemeProvider theme={settingsStore.theme === 'light' ? ThemeLight : ThemeDark}>
+            <CircularProgress size={64}/>
+        </ThemeProvider>
+    }
 
     return <ThemeProvider theme={settingsStore.theme === 'light' ? ThemeLight : ThemeDark}>
         <MemoryRouter>

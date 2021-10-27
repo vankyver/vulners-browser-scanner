@@ -10,7 +10,7 @@ import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     header: {
-        background: theme.palette.type === 'light' ? 'url("/img/background_light.png") 40% 4%' : 'url("/img/background_dark.png") 40% 4%',
+        background: 'url("/img/background.jpg") 20%;',
         color: theme.palette.secondary.main,
     },
     icon: {
