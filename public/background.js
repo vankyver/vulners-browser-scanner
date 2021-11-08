@@ -171,10 +171,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('[ACTION]', request);
     switch (request.action) {
         case 'show_vulnerabilities':
+            console.log('[ACTION] show_vulnerabilities', chrome.runtime.id);
             sender.id === chrome.runtime.id && getCurrentTab().then(tabs => {
                 try {
-                    console.log('[ACTION] show vulnerabilities', tabs, { data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0].url)})
-                    sendResponse({ data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0].url)})
+                    console.log('[ACTION] show vulnerabilities', tabs, { data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0] ? tabs[0].url : '')})
+                    sendResponse({ data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0] ? tabs[0].url : '')})
+                } catch (e) {
+                    console.error('[ACTION] show vulnerabilities', e)
+                }
+            });
+            break;
+        case 'load_settings':
+            sender.id === chrome.runtime.id && getCurrentTab().then(tabs => {
+                try {
+                    sendResponse({settings})
                 } catch (e) {
                     console.error('[ACTION] show vulnerabilities', e)
                 }
@@ -195,12 +205,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             extraData = [];
             landingSeen = false;
             stat = {vulnerable: 0, scanned: 0};
-            settings = {
-                showOnlyVulnerable: true,
-                showAllDomains: false,
-                doExtraScan: true,
-                introStep: 0
-            };
             storage.set({
                 [LS_KEY_DATA]: data,
                 [LS_KEY_STAT]: stat,
@@ -235,12 +239,12 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
             }
             storage.get({[LS_KEY_SETTINGS]: {}}, (keys) => {
                 try {
-                    let settings = JSON.parse(keys[LS_KEY_SETTINGS])
-                    settings.apiKey = request.apiKey
-                    storage.set({[LS_KEY_SETTINGS]: JSON.stringify(settings)});
-                    console.log('[SET API KEY] sending response', settings)
+                    let newSettings = JSON.parse(keys[LS_KEY_SETTINGS])
+                    newSettings.apiKey = request.apiKey
+                    storage.set({[LS_KEY_SETTINGS]: JSON.stringify(newSettings)});
+                    console.log('[SET API KEY] sending response', newSettings)
                     sendResponse({success: true})
-                    chrome.runtime.sendMessage({action: 'settings', settings})
+                    settings = newSettings
                 } catch (e) {
                     console.error('[SET API KEY]', e)
                     sendResponse({success: false})
@@ -325,8 +329,9 @@ function addMatchedFingerprint(url, rule, version) {
 }
 
 function fetchThrottled(host, rule, version) {
-    console.log('[Fetch] ', host, {software: rule.name || rule.alias, version, type: rule.type});
-
+    if (!version) {
+        return addVulnerabilities(host, rule, version, [])
+    }
     fetch(SCAN_URL, {
         method: 'POST',
         mode: 'cors',
@@ -344,53 +349,58 @@ function fetchThrottled(host, rule, version) {
     })
         .then(r => r.json())
         .then(r => {
-            let items = r.data.search || [];
-
-            // Add vulnerabilities
-            let vulnerabilities = items.map(i => {
-                    let s = i._source;
-                    console.log('[SOURCE]', "scoreColor", s.cvss.score, getScoreColor(s.cvss.score));
-                    return {
-                        id: s.id,
-                        type: s.type,
-                        title: s.title === s.id ? s.description : s.title,
-                        score: getScore(s),
-                        scoreColor: getScoreColor(s.cvss.score),
-                        description: s.description
-                    }
-                })
-                .sort((a,b) => b.score - a.score);
-            let vulnerable = !!vulnerabilities.length || data[host]['vulnerable'];
-            let exploit    = !!vulnerabilities.find(v => v.bulletinFamily === 'exploit');
-            let score      = vulnerabilities.reduce((a,v) => a > v.score ? a : v.score, 0);
-            let scoreColor = getScoreColor(score);
-
-            let software = Object.assign({}, data[host]['software'], {
-                [rule.name]: Object.assign(data[host]['software'][rule.name], {
-                    score,
-                    scoreColor,
-                    vulnerabilities
-                })
-            });
-
-            // Add max score value of soft vulnerability
-            data[host] = Object.assign({}, data[host], {
-                vulnerable,
-                software,
-                exploit
-            });
-
-            let domainNames = Object.keys(data);
-            stat = {
-                scanned: domainNames.length,
-                vulnerable: domainNames.filter( name => !!Object.keys(data[name]['software']).find(soft => data[name]['software'][soft].score)).length
-            };
-
-            storage.set({
-                [LS_KEY_DATA]: JSON.stringify(data),
-                [LS_KEY_STAT]: JSON.stringify(stat)
-            })
+            addVulnerabilities(host, rule, version, r.data.search || [])
         });
+}
+
+function addVulnerabilities(host, rule, version, vulnerabilities) {
+    // Add vulnerabilities
+    vulnerabilities = vulnerabilities.map(i => {
+        let s = i._source;
+        console.log('[SOURCE]', "scoreColor", s.cvss.score, getScoreColor(s.cvss.score));
+        return {
+            id: s.id,
+            type: s.type,
+            title: s.title === s.id ? s.description : s.title,
+            score: getScore(s),
+            scoreColor: getScoreColor(s.cvss.score),
+            description: s.description
+        }
+    })
+        .sort((a,b) => b.score - a.score);
+    let vulnerable = !!vulnerabilities.length || data[host]['vulnerable'];
+    let exploit    = !!vulnerabilities.find(v => ['exploitdb', 'githubexploit', 'packetstorm'].indexOf(v.type) >=0 );
+    let score      = vulnerabilities.reduce((a,v) => a > v.score ? a : v.score, 0);
+    let scoreColor = getScoreColor(score);
+
+    console.log('[EXPLOIT?]', exploit, vulnerabilities)
+
+    let software = Object.assign({}, data[host]['software'], {
+        [rule.name]: Object.assign(data[host]['software'][rule.name], {
+            score,
+            scoreColor,
+            vulnerabilities,
+            exploit
+        })
+    });
+
+    // Add max score value of soft vulnerability
+    data[host] = Object.assign({}, data[host], {
+        vulnerable,
+        software,
+        exploit
+    });
+
+    let domainNames = Object.keys(data);
+    stat = {
+        scanned: domainNames.length,
+        vulnerable: domainNames.filter( name => !!Object.keys(data[name]['software']).find(soft => data[name]['software'][soft].score)).length
+    };
+
+    storage.set({
+        [LS_KEY_DATA]: JSON.stringify(data),
+        [LS_KEY_STAT]: JSON.stringify(stat)
+    })
 }
 
 function validateKey(apiKey, cb) {
@@ -418,5 +428,4 @@ const extractDomain = url => {
     }
 };
 
-console.log('[INIT___]');
 chrome.action.setBadgeBackgroundColor({color: '#d35400'});

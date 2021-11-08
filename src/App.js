@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {MemoryRouter} from 'react-router-dom';
+import {MemoryRouter, useHistory} from 'react-router-dom';
 import {Switch, Route} from "react-router-dom";
 
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -17,6 +17,31 @@ import {CircularProgress} from "@material-ui/core";
 
 /*global v_browser*/
 
+let AppLayout = inject('settingsStore', 'dataStore')(observer(({settingsStore, dataStore, children}) => {
+    const history = useHistory()
+
+    useEffect(() => {
+        console.log('[AppLayout] apiKey changed', settingsStore.apiKey, history)
+        settingsStore.apiKey && history.push('/')
+    }, [settingsStore.apiKey])
+
+    useEffect(() => {
+        console.log('[AppLayout] apiKey changed', settingsStore.apiKey, history)
+        settingsStore.apiKey && history.push('/')
+    }, [settingsStore.apiKey])
+
+    useEffect(() => {
+        console.log('[AppLayout] data loaded', settingsStore, history)
+        if (settingsStore.apiKey) {
+            history.location.pathname === '/main' && history.push('/')
+        } else {
+            history.location.pathname === '/' && history.push('/main')
+        }
+    }, [dataStore.loaded])
+
+    return <React.Fragment>{children}</React.Fragment>
+}))
+
 const App = ({settingsStore, dataStore}) => {
 
     const openLink = url => url && v_browser.runtime.sendMessage({action: 'open_link', url});
@@ -27,6 +52,7 @@ const App = ({settingsStore, dataStore}) => {
     })
 
     useEffect(() => {
+        console.log('[App] loadData')
         dataStore.loadData()
     }, [])
 
@@ -38,13 +64,15 @@ const App = ({settingsStore, dataStore}) => {
 
     return <ThemeProvider theme={settingsStore.theme === 'light' ? ThemeLight : ThemeDark}>
         <MemoryRouter>
-            <Switch>
-                <Route exact path="/main" component={Main}/>
-                <Layout>
-                    <Route exact path="/" component={Search}/>
-                    <Route exact path="/about" component={About}/>
-                </Layout>
-            </Switch>
+            <AppLayout>
+                <Switch>
+                    <Route exact path="/main" component={Main}/>
+                    <Layout>
+                        <Route exact path="/" component={Search}/>
+                        <Route exact path="/about" component={About}/>
+                    </Layout>
+                </Switch>
+            </AppLayout>
         </MemoryRouter>
     </ThemeProvider>
 }

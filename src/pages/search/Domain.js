@@ -7,6 +7,7 @@ import HiddenSoft from "./placeholder/HiddenSoft";
 import {inject, observer} from "mobx-react";
 import {Box, Card, CardActions, List, Paper, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
+import {toJS} from "mobx";
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,6 +24,7 @@ const Domain = ({settingsStore, name='', software={}, vulnerable=false}) => {
 
     let softToShow = []
     let softToHide = []
+
     if (showOnlyVulnerable) {
         for (let soft of Object.values(software)) {
             !!soft.vulnerabilities.length ? softToShow.push(soft) : softToHide.push(soft)

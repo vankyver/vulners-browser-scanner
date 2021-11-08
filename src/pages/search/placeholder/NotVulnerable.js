@@ -1,7 +1,7 @@
 import React from 'react'
 
 import HiddenSoft from "./HiddenSoft";
-import {BrokenImage, CloudDone, CloudDoneOutlined} from "@material-ui/icons";
+import {BrokenImage, CloudDone, CloudDoneOutlined, OpenInBrowser} from "@material-ui/icons";
 import {Box, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -32,10 +32,11 @@ const NotVulnerable = ({url, data, hiddenSoft}) => {
                 <HiddenSoft hiddenSoft={hiddenSoft}/>
             </span>
     } else {
-        icon = <BrokenImage className={classes.icon}/>
-        text = <p>Invalid host</p>
+        icon = <OpenInBrowser className={classes.icon}/>
+        text = <p>Go to some site to start scanning</p>
     }
 
+    url && (url = url.replace('www.', ''))
     return <Box display='flex' alignItems='center' justifyContent='center' flexDirection='column' className={classes.box}>
         {icon}
         <br/>

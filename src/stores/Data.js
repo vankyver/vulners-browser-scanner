@@ -29,24 +29,31 @@ export default class DataStore {
     }
 
     loadData = () => sendMessage({action: 'show_vulnerabilities'}, (data) => {
-        if (process.env.NODE_ENV !== 'production') {
-            data = TestData
-        }
+        // if (process.env.NODE_ENV !== 'production') {
+        //     data = TestData
+        // }
 
         console.log('[VULNERS]', {
             type: 'LOAD_DATA_RECEIVED',
             ...data
         });
         Object.assign(this, data)
-        Object.assign(this.settingsStore, data.settings)
+        this.settingsStore.updateSettings(data.settings)
         this.loaded = true
     });
 
-    clearData = () => sendMessage({action: 'clear_data', settings: {}});
+    setLoading = () => this.loaded = false
+
+    clearData = () => {
+        sendMessage({action: 'clear_data'});
+        this.url = ''
+        this.data = []
+        this.stat = {vulnerable: 0, scanned: 0}
+    }
 
     setLandingSeen = () => {
         this.landingSeen = true
-        sendMessage({action: 'landing_seen', landingSeen: true});
+        sendMessage({action: 'landing_seen'});
     }
 
 }

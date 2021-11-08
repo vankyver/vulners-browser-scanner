@@ -38,14 +38,22 @@ export default class SettingsStore {
             closeSettings: action
         })
         try {
+            console.error('[Settings] setup', this)
             chrome.runtime.onMessage.addListener((message, sender) => {
+                console.log('[Settings] load settings', message, sender)
                 if (message.action === 'settings') {
                     Object.assign(this, message.settings)
+                    console.log('[Settings] loaded settings', message.settings, sender, this)
                 }
             })
         } catch (e) {
             console.error('[Settings]', e)
         }
+    }
+
+    updateSettings = (settings) => {
+        console.log('[Settings] updated', settings)
+        Object.assign(this, settings)
     }
 
     closeSettings = () => this.open = false

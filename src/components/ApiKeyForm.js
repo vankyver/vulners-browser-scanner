@@ -1,26 +1,75 @@
-import {Box, Button, TextField} from "@material-ui/core";
+import React from "react";
+import {Box, Button, IconButton, List, ListSubheader, TextField} from "@material-ui/core";
 import {useState} from "react";
 import {makeStyles} from "@material-ui/styles";
 import {inject, observer} from "mobx-react";
+import {Close} from "@material-ui/icons";
 
 
 
 const useStyles = makeStyles(theme => ({
+    subheader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        paddingRight: 4,
+        width:320
+    },
     form: {
         flex: 1
-    }
+    },
 }))
 
-const ApiKeyForm = ({settingsStore}) => {
+const ApiKeyForm = ({settingsStore, onClose, onSuccess}) => {
 
-    const classes = useStyles()
-    const [value, setValue] = useState('')
+    let classes = useStyles()
+    let [value, setValue] = useState(settingsStore.apiKey)
+    let [hidden, setHidden] = useState(true)
+    let [error, setError] = useState('')
 
-    return <Box p={2} className={classes.form}>
-        <TextField label='API Key' defaultValue={settingsStore.apiKey} fullWidth value={value} onChange={e => setValue(e.target.value)}/>
+    const handleSaveKey = () => {
+        if (!value) {
+            return setError('API Key can not be empty')
+        }
 
-        <Button color='primary'>Save</Button>
-    </Box>
+        settingsStore.validateAPIKey(value, (response) => {
+            if (response.valid) {
+                settingsStore.setApiKey(value)
+                onSuccess()
+            } else {
+                setError('API Key is not valid')
+            }
+        })
+    }
+
+    const handleChange = (e) => {
+        setError('')
+        setValue(e.target.value)
+    }
+
+    value = hidden ? value.slice(0,3) + ' * * * * ' + value.slice(value.length-3, value.length) : value
+
+    return <List style={{height: '100%'}} subheader={
+        <ListSubheader component="div" className={classes.subheader}>
+            <div>
+                Change Api Key
+            </div>
+            <IconButton onClick={onClose}>
+                <Close/>
+            </IconButton>
+        </ListSubheader>
+    }>
+        <Box p={2} mt={2} className={classes.form}>
+            <TextField label='API Key' fullWidth value={value}
+                       error={!!error}
+                       helperText={error}
+                       onChange={handleChange}
+                       onClick={() => hidden && setHidden(false)}/>
+
+            <Box mt={2} display='flex' justifyContent='flex-end'>
+                <Button color='primary' onClick={handleSaveKey}>Save</Button>
+            </Box>
+        </Box>
+    </List>
 
 }
 

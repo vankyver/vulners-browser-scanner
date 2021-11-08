@@ -10,7 +10,7 @@ import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     header: {
-        background: 'url("/img/background.jpg") 20%;',
+        background: '#030303',
         color: theme.palette.secondary.main,
     },
     icon: {
@@ -40,8 +40,8 @@ const Header = ({dataStore, settingsStore}) => {
                         </Link>
                 }
             </Box>
-            <Box variant='body1' ml={2}> vulnerable&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.vulnerable || 0}</Typography></Box>
-            <Box variant='body1' ml={2}> scanned&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.scanned || 0}</Typography></Box>
+            <Box variant='body1' ml={2}> Vulnerable&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.vulnerable || 0}</Typography></Box>
+            <Box variant='body1' ml={2}> Scanned&nbsp;&nbsp;<Typography component='span' variant='body1' color='primary'>{stat.scanned || 0}</Typography></Box>
         </Box>
         <IconButton color='secondary' onClick={() => !open ? settingsStore.openSettings() : settingsStore.closeSettings()}>
             <Settings/>

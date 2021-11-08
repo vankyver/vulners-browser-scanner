@@ -46,20 +46,23 @@ const Search = ({dataStore, settingsStore}) => {
         data = data.filter(domain => domain.vulnerable)
     }
 
-    if (!landingSeen) {
-        history.push('/main')
-    }
+    // if (!landingSeen) {
+    //     console.log('[SEARCH] !landingSeen', !landingSeen)
+    //     history.push('/')
+    // }
 
     if (!data.length) {
-        console.log('[NOT VULNERABLE]', url, data, landingSeen)
+        console.log('[SEARCH] Not Vulnerable', url, data, landingSeen)
         return <NotVulnerable url={url} data={data} hiddenSoft={domainSoft}/>
     }
 
     if (searchValue) {
+        console.log('[SEARCH] searchValue', searchValue)
         let re = new RegExp(searchValue, 'ig');
         data = data.filter(d => re.test(Object.keys(d.software).join() + d.name + d.score));
     }
 
+    console.log('[SEARCH]', data)
     return <div className={classes.root}>
         {settingsStore.showAllDomains && <Box display='flex' pt={1} pr={2} alignItems='center'>
             <IconButton>

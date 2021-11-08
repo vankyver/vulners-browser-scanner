@@ -2,14 +2,16 @@ import React, {useState} from 'react';
 
 import Score from "./vulnerability/Score";
 import Vulnerability from "./Vulnerability";
-import {Collapse, List, ListItem, ListItemText} from "@material-ui/core";
+import {Box, Collapse, List, ListItem, ListItemText, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles({
     content: {
-        display: 'flex',
-        justifyContent: 'space-between'
+        display: 'flex'
+    },
+    name: {
+        flex: 1
     }
 });
 
@@ -22,8 +24,8 @@ const Software = ({software, version, score, scoreColor, exploit, vulnerabilitie
         <ListItem button={!!vulnerabilities.length}
                   className={classes.content}
                   onClick={() => setOpen(!open)}>
-            <div>{software} {version ? (" - " + version) : ""}</div>
-            {exploit && <div> HAS EXPLOIT! </div>}
+            <Typography variant='body2' component='div' className={classes.name}>{software} {version ? (" - " + version) : ""}</Typography>
+            {exploit && <Box pr={2} pl={1}> HAS EXPLOIT! </Box>}
             <Score score={score} scoreColor={scoreColor}/>
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>

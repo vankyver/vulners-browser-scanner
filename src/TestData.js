@@ -15,6 +15,9 @@ const TestData = {
         showAllDomains: true,
         showOnlyVulnerable: true,
         doExtraScan: true,
+        apiKey: "123",
+        introStep: 2,
+        theme: "dark"
     }
 }
 

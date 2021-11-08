@@ -18,13 +18,13 @@ module.exports = {
                         presets: ['@babel/preset-env',
                             '@babel/react',{
                                 'plugins': ['@babel/plugin-proposal-class-properties']
-                        }]
+                            }]
                     }
                 },
             },
             {
                 test: /\.s?css$/,
-                use: ["style-loader", "css-loader"]
+                use: ["style-loader", "css-loader", "sass-loader"]
             },
             {
                 test: /\.svg$/,
