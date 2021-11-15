@@ -29,9 +29,6 @@ export default class DataStore {
     }
 
     loadData = () => sendMessage({action: 'show_vulnerabilities'}, (data) => {
-        // if (process.env.NODE_ENV !== 'production') {
-        //     data = TestData
-        // }
 
         console.log('[VULNERS]', {
             type: 'LOAD_DATA_RECEIVED',

@@ -1,16 +1,21 @@
 import {createTheme} from "@material-ui/core";
 
 const Light = createTheme({
+    typography: {
+        fontFamily: [
+            '"IBM Plex Sans"',
+        ].join(','),
+    },
     overrides: {
         MuiPaper: {
             rounded: {
-                borderRadius: 8
+                borderRadius: 10
             }
         }
     },
     palette: {
-        common: { black: '#000', white: '#fff' },
         type: 'light',
+        common: { black: '#000', white: '#fff' },
         default: {
             main: '#38383a',
             light: '#38383a',

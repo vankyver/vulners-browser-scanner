@@ -12,7 +12,8 @@ import {toJS} from "mobx";
 
 const useStyles = makeStyles(theme => ({
     header: {
-        fontWeight: 300
+        fontWeight: 300,
+        wordBreak: 'break-all'
     }
 }))
 

@@ -19,6 +19,7 @@ export default class SettingsStore {
     apiKey = ''
     theme = THEMES.LIGHT
     introStep = 0
+    error = ''
 
     constructor() {
         makeObservable(this, {
@@ -29,6 +30,7 @@ export default class SettingsStore {
             introStep: observable,
             apiKey: observable,
             theme: observable,
+            error: observable,
 
             setShowNotVulnerable: action,
             setShowAllDomains: action,
@@ -38,12 +40,9 @@ export default class SettingsStore {
             closeSettings: action
         })
         try {
-            console.error('[Settings] setup', this)
             chrome.runtime.onMessage.addListener((message, sender) => {
-                console.log('[Settings] load settings', message, sender)
                 if (message.action === 'settings') {
                     Object.assign(this, message.settings)
-                    console.log('[Settings] loaded settings', message.settings, sender, this)
                 }
             })
         } catch (e) {
@@ -52,7 +51,6 @@ export default class SettingsStore {
     }
 
     updateSettings = (settings) => {
-        console.log('[Settings] updated', settings)
         Object.assign(this, settings)
     }
 
@@ -97,7 +95,6 @@ export default class SettingsStore {
 
     validateAPIKey = (apiKey, cb) => {
         sendMessage({action: 'validate_key', apiKey}, (response) => {
-            console.log('[VALIDATE_KEY]', response)
             cb(response)
         })
     }
@@ -109,7 +106,8 @@ export default class SettingsStore {
             doExtraScan: this.doExtraScan,
             introStep: this.introStep,
             apiKey: this.apiKey,
-            theme: this.theme
+            theme: this.theme,
+            error: this.error
         }}, cb)
     }
 }

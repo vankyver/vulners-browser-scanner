@@ -1,9 +1,10 @@
 import React from "react";
-import {Box, Button, IconButton, List, ListSubheader, TextField} from "@material-ui/core";
+import {Box, Button, IconButton, List, ListSubheader, TextField, Typography} from "@material-ui/core";
 import {useState} from "react";
 import {makeStyles} from "@material-ui/styles";
 import {inject, observer} from "mobx-react";
 import {Close} from "@material-ui/icons";
+import {Link} from "react-router-dom";
 
 
 
@@ -17,6 +18,10 @@ const useStyles = makeStyles(theme => ({
     form: {
         flex: 1
     },
+    link: {
+        textDecoration: 'none',
+        color: theme.palette.primary.main
+    }
 }))
 
 const ApiKeyForm = ({settingsStore, onClose, onSuccess}) => {
@@ -58,7 +63,13 @@ const ApiKeyForm = ({settingsStore, onClose, onSuccess}) => {
             </IconButton>
         </ListSubheader>
     }>
-        <Box p={2} mt={2} className={classes.form}>
+        <Box p={2} mt={1}>
+            <Typography variant='body1'>
+                Follow <a className={classes.link} href="https://vulners.com/api-keys#web-extension" target="_blank">vulners.com</a> to create new api key
+            </Typography>
+        </Box>
+        <Box p={2} className={classes.form}>
+
             <TextField label='API Key' fullWidth value={value}
                        error={!!error}
                        helperText={error}

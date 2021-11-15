@@ -1,8 +1,6 @@
 
-console.log('[VULNERS] Init');
 
 v_browser.runtime.sendMessage({ action: 'get_regexp'}, (rules) => {
-    console.log('[VULNERS] Rules', rules);
 
     let html = document.documentElement.innerHTML;
     let matches = [];
@@ -25,9 +23,7 @@ v_browser.runtime.sendMessage({ action: 'get_regexp'}, (rules) => {
 
 var origOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function() {
-    console.log('request started!');
     this.addEventListener('load', function() {
-        console.log('request completed!');
         console.log(this.readyState); //will always be 4 (ajax is completed successfully)
         console.log(this.responseText); //whatever the response was
     });

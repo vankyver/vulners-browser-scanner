@@ -21,17 +21,14 @@ let AppLayout = inject('settingsStore', 'dataStore')(observer(({settingsStore, d
     const history = useHistory()
 
     useEffect(() => {
-        console.log('[AppLayout] apiKey changed', settingsStore.apiKey, history)
         settingsStore.apiKey && history.push('/')
     }, [settingsStore.apiKey])
 
     useEffect(() => {
-        console.log('[AppLayout] apiKey changed', settingsStore.apiKey, history)
         settingsStore.apiKey && history.push('/')
     }, [settingsStore.apiKey])
 
     useEffect(() => {
-        console.log('[AppLayout] data loaded', settingsStore, history)
         if (settingsStore.apiKey) {
             history.location.pathname === '/main' && history.push('/')
         } else {
@@ -52,7 +49,6 @@ const App = ({settingsStore, dataStore}) => {
     })
 
     useEffect(() => {
-        console.log('[App] loadData')
         dataStore.loadData()
     }, [])
 

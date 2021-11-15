@@ -58,8 +58,10 @@ const StepWelcome = ({classes, onNextClick}) =>
 
             <Typography variant='h5' align='center'>Welcome to <br/>Vulners web scanner!</Typography>
 
-            <Box p={3}>
-                Extension provides ability to passively scan web-sites while you surf internet
+            <Box p={3} mb={3}>
+                <Typography variant='body2'>
+                    Extension provides ability to passively scan web-sites while you surf internet
+                </Typography>
             </Box>
 
             <br/>
@@ -86,7 +88,6 @@ const Main = ({settingsStore, dataStore}) =>  {
         setActiveStep(activeStep - 1)
     }
 
-    console.log('[INTRO STEP]', settingsStore.introStep)
     const [activeStep, setActiveStep] = useState(settingsStore.introStep)
     const getStepContent = () => {
         switch (activeStep) {
@@ -100,15 +101,6 @@ const Main = ({settingsStore, dataStore}) =>  {
                 return <StepWelcome {...{classes, onNextClick}}/>
         }
     }
-
-    // useEffect(() => {
-    //     !settingsStore.apiKey && settingsStore.introStep && settingsStore.setIntroStep(activeStep)
-    //     console.log('[activeStep]', activeStep)
-    // }, [activeStep])
-
-    // useEffect(() => {
-    //     !settingsStore.apiKey && settingsStore.introStep && setActiveStep(settingsStore.introStep)
-    // }, [settingsStore.introStep])
 
     return <Box className={classes.main}>
 

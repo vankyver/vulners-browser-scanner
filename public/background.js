@@ -1,7 +1,7 @@
-
 /**
  * Pure throttle implementation
  **/
+
 const throttled = (fn, timeout) => {
     let task, queue = [];
     let lastTaskTime;
@@ -68,7 +68,8 @@ storage.get({[LS_KEY_SETTINGS]: {}}, (keys) => {
             showAllDomains: false,
             doExtraScan: true,
             apiKey: '',
-            introStep: 0
+            introStep: 0,
+            error: ''
         }
     }
 })
@@ -83,7 +84,7 @@ const SCAN_URL  = "https://vulners.com/api/v3/burp/software/?utm_source=scanner&
 const DOMAIN_REGEX = /http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{2,18}))(?:$|\/)/i;
 const PUNYCODE_DOMAIN_REGEX = /http(?:s)?:\/\/(([\w-]{1,63})\.([\w-]{8,15}))(?:$|\/)/i;
 
-const COLORS = ['#00e676','#76ff03','#c6ff00','#c6ff00','#ffee58','#ffc107','#ff9800','#f57c00','#ef6c00','#e65100'];
+const COLORS = ['#00c400','#00e020','#00f000','#d1ff00','#ffe000','#ffcc00','#ffbc10','#ff9c20','#ff8000','#ff0000'];
 
 const STATIC_RESPONSE_TYPES = ["script", "font", "stylesheet", "other"];
 
@@ -93,7 +94,6 @@ const STATIC_RESPONSE_TYPES = ["script", "font", "stylesheet", "other"];
 fetch(RULES_URL)
     .then(r => r.json())
     .then(r => {
-        console.log('[Rules] received', r)
         Object.keys(r.data.rules)
             .forEach(ruleName => {
                 let rule = r.data.rules[ruleName];
@@ -134,7 +134,6 @@ chrome.tabs.onActivated.addListener(e => {
 });
 
 function decorateBadge(tab) {
-    console.log('[BACKGROUND] decorate badge - tab', tab, tab.url)
     let url = new URL(tab.url);
     let host = data[url.host] || data[url.hostname];
 
@@ -149,7 +148,6 @@ function decorateBadge(tab) {
             text : String(vLength || sLength),
             tabId: tab.id
         });
-        console.log('[BACKGROUND] decorate badge -  host.vulnerable', host.vulnerable, sLength, vLength)
         chrome.action.setBadgeBackgroundColor({
             color: host.vulnerable ? '#d35400' : '#00c400'
         });
@@ -168,13 +166,10 @@ function getCurrentTab() {
  * Message listeners
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('[ACTION]', request);
     switch (request.action) {
         case 'show_vulnerabilities':
-            console.log('[ACTION] show_vulnerabilities', chrome.runtime.id);
             sender.id === chrome.runtime.id && getCurrentTab().then(tabs => {
                 try {
-                    console.log('[ACTION] show vulnerabilities', tabs, { data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0] ? tabs[0].url : '')})
                     sendResponse({ data: Object.values(data),  stat,  settings,  landingSeen,  url: extractDomain(tabs[0] ? tabs[0].url : '')})
                 } catch (e) {
                     console.error('[ACTION] show vulnerabilities', e)
@@ -205,10 +200,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             extraData = [];
             landingSeen = false;
             stat = {vulnerable: 0, scanned: 0};
+            settings.error = '';
             storage.set({
                 [LS_KEY_DATA]: data,
                 [LS_KEY_STAT]: stat,
                 [LS_KEY_EXTRA_DATA]: extraData,
+                [LS_KEY_SETTINGS]: settings,
             })
             return getCurrentTab().then(tabs => {
                 sendResponse({tab: tabs[0], data, stat})
@@ -233,7 +230,6 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
     }
     switch (request.action) {
         case 'set_key':
-            console.log('[SET API KEY]', request, sender)
             if (!request.apiKey) {
                 return console.error('[SET API KEY] key can not be null', request)
             }
@@ -242,7 +238,6 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
                     let newSettings = JSON.parse(keys[LS_KEY_SETTINGS])
                     newSettings.apiKey = request.apiKey
                     storage.set({[LS_KEY_SETTINGS]: JSON.stringify(newSettings)});
-                    console.log('[SET API KEY] sending response', newSettings)
                     sendResponse({success: true})
                     settings = newSettings
                 } catch (e) {
@@ -267,7 +262,6 @@ function findFingerprintsInHeaders (response) {
     if (!url) return;
 
     if (settings.doExtraScan && !extraData.includes(response.url) && STATIC_RESPONSE_TYPES.includes(response.type)) {
-        console.log('[SCAN STATIC] -> ', response.type, response.url);
 
         extraData.push(response.url);
         storage.set({[LS_KEY_EXTRA_DATA]: JSON.stringify(extraData)});
@@ -309,8 +303,6 @@ function findFingerprints(url, content) {
 function addMatchedFingerprint(url, rule, version) {
     let {name, alias, type} = rule;
 
-    console.log('[Add] ', url, {software: name || alias, version, type: type});
-
     if (!data[url]) {
         data[url] = {
             name: url,
@@ -349,15 +341,30 @@ function fetchThrottled(host, rule, version) {
     })
         .then(r => r.json())
         .then(r => {
-            addVulnerabilities(host, rule, version, r.data.search || [])
+            settings.error = ''
+            if (r.result === 'error') {
+                console.error('[ERROR]', r)
+                processError(host, r.data)
+            } else {
+                addVulnerabilities(host, rule, version, r.data.search || [])
+            }
         });
+}
+
+function processError(host, error) {
+    switch (error.errorCode){
+        case 157:
+            settings.error = 'ERROR: Check your Api Key. Follow vulners.com/license to update it'
+            break
+        default:
+            console.error('[ERROR]', error)
+    }
 }
 
 function addVulnerabilities(host, rule, version, vulnerabilities) {
     // Add vulnerabilities
     vulnerabilities = vulnerabilities.map(i => {
         let s = i._source;
-        console.log('[SOURCE]', "scoreColor", s.cvss.score, getScoreColor(s.cvss.score));
         return {
             id: s.id,
             type: s.type,
@@ -372,8 +379,6 @@ function addVulnerabilities(host, rule, version, vulnerabilities) {
     let exploit    = !!vulnerabilities.find(v => ['exploitdb', 'githubexploit', 'packetstorm'].indexOf(v.type) >=0 );
     let score      = vulnerabilities.reduce((a,v) => a > v.score ? a : v.score, 0);
     let scoreColor = getScoreColor(score);
-
-    console.log('[EXPLOIT?]', exploit, vulnerabilities)
 
     let software = Object.assign({}, data[host]['software'], {
         [rule.name]: Object.assign(data[host]['software'][rule.name], {
@@ -401,6 +406,12 @@ function addVulnerabilities(host, rule, version, vulnerabilities) {
         [LS_KEY_DATA]: JSON.stringify(data),
         [LS_KEY_STAT]: JSON.stringify(stat)
     })
+
+    getCurrentTab().then(tabs => {
+        if (host === extractDomain(tabs[0].url)) {
+            decorateBadge(tabs[0])
+        }
+    })
 }
 
 function validateKey(apiKey, cb) {
@@ -418,7 +429,6 @@ const getScoreColor = score => {
 };
 
 const extractDomain = url => {
-    console.log('[extractDomain]', url)
     let domain = url.match(DOMAIN_REGEX);
     if (domain) {
         return new URL(domain[0]).host

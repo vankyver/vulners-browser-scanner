@@ -12,13 +12,17 @@ import NotFound from "./search/placeholder/NotFound";
 const useStyles = makeStyles({
     root: {
         height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
     },
     data: {
-        height: 'calc(100% - 56px)',
         overflowY: 'scroll',
         scrollbarWidth: 'none',  /* Firefox */
         '&::-webkit-scrollbar': {
             display: 'none'
+        },
+        "& >div:last-child": {
+            marginBottom: "56px"
         }
     }
 });
@@ -46,32 +50,24 @@ const Search = ({dataStore, settingsStore}) => {
         data = data.filter(domain => domain.vulnerable)
     }
 
-    // if (!landingSeen) {
-    //     console.log('[SEARCH] !landingSeen', !landingSeen)
-    //     history.push('/')
-    // }
-
     if (!data.length) {
-        console.log('[SEARCH] Not Vulnerable', url, data, landingSeen)
         return <NotVulnerable url={url} data={data} hiddenSoft={domainSoft}/>
     }
 
     if (searchValue) {
-        console.log('[SEARCH] searchValue', searchValue)
         let re = new RegExp(searchValue, 'ig');
         data = data.filter(d => re.test(Object.keys(d.software).join() + d.name + d.score));
     }
 
-    console.log('[SEARCH]', data)
     return <div className={classes.root}>
-        {settingsStore.showAllDomains && <Box display='flex' pt={1} pr={2} alignItems='center'>
+        {settingsStore.showAllDomains && <Box display='flex' pr={2} alignItems='center'>
             <IconButton>
                 <SearchOutlined/>
 
             </IconButton>
             <TextField value={searchValue} fullWidth onChange={(e) => setSearchValue(e.target.value)}/>
         </Box>}
-        <Box className={classes.data}>
+        <Box className={classes.data} flex={1}>
             {searchValue && !data.length && <NotFound/>}
             {data.map(domain => <Domain key={domain.name} name={domain.name} vulnerable={domain.vulnerable} software={domain['software']}/>)}
         </Box>

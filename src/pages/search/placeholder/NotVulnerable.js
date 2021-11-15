@@ -33,7 +33,7 @@ const NotVulnerable = ({url, data, hiddenSoft}) => {
             </span>
     } else {
         icon = <OpenInBrowser className={classes.icon}/>
-        text = <p>Go to some site to start scanning</p>
+        text = <p>Go to some website to start scanning</p>
     }
 
     url && (url = url.replace('www.', ''))

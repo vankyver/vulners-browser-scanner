@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
 
 import Header from "./Header";
 import Navbar from "./Navbar";
 import {makeStyles} from "@material-ui/core/styles";
 import {Box} from "@material-ui/core";
+import Error from "./Error";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,11 +18,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Layout = ({children}) => {
-
     const classes = useStyles()
 
     return <Box className={classes.root}>
         <Header/>
+        <Error/>
         <Navbar/>
         <Box className={classes.body}>
             {children}

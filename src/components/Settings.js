@@ -46,22 +46,22 @@ const Settings = ({dataStore, settingsStore, setApiKeyOpen}) => {
                 </IconButton>
             </ListSubheader>
         }>
-            <ListItem button>
+            <ListItem button onChange={settingsStore.setShowAllDomains}>
                 <FormControlLabel
-                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.showAllDomains} onChange={settingsStore.setShowAllDomains} name="showAllDomains" />}
+                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.showAllDomains} name="showAllDomains" />}
                     label="Show All Domains"
                 />
             </ListItem>
-            <ListItem button>
+            <ListItem button onChange={settingsStore.setShowNotVulnerable}>
                 <FormControlLabel
-                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.showOnlyVulnerable} onChange={settingsStore.setShowNotVulnerable} name="showOnlyVulnerable" />}
+                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.showOnlyVulnerable} name="showOnlyVulnerable" />}
                     label="Show only vulnerable hosts"
                 />
             </ListItem>
             <Divider/>
-            <ListItem button>
+            <ListItem button onChange={settingsStore.setDoExtraScan}>
                 <FormControlLabel
-                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.doExtraScan} onChange={settingsStore.setDoExtraScan} name="doExtraScan" />}
+                    control={<Switch className={classes.switch} color='primary' checked={settingsStore.doExtraScan} name="doExtraScan" />}
                     label="Do extra scan of resources"
                 />
                 <Tooltip title="extension will do second request to receive and parse content of static files (for example checking the vulnerable CDNs)">
